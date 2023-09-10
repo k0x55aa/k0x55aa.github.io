@@ -1,13 +1,12 @@
 ---
 layout: post
-title: "IOT NOTES"
-categories: hardware
+title: "Understanding The PE File Format Structure - Part 1"
+categories: windows
 author:
 - k0x55aa
-meta: "IOT"
+meta: "windows"
 ---
 
-# Understanding The PE File Format Structure - Part 1
 
 ### Introduction
 
