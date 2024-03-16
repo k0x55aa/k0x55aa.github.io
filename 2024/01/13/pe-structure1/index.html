@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>Understanding The PE File Format Structure - Part 1 | k0x55aa</title>
+  <meta name="author" content="k0x55aa">
+  
+  <meta name="description" content="IntroductionWhen we load a CD or pendrive in a computer disc drive, the cpu understands what to do irrespective of the operating system i.e windows or linux. Similarly PE file is the executable file which can be loaded in the windows operating system. And the windows operating system knows what to do with PE file i.e “.exe” file.Have you wonder what lies behind the windows executable file or PE file “.exe” . There often times, we will come across depending on the work like reversing a windows binary, programming a windows binary, analysing malware etc.The main goal of this article is to understand the PE file structure and what can we do with the underlying structure of the PE file.
+Basic PE File StructureWindows has many flavors (Windows XP, Windows 7, Windows 10) so in order to support for all windows flavors the PE file format was created. To understand the PE format. Lets create a simple PE file PEstructure program in C
+123456#include &amp;lt;stdio.h&amp;gt;int main(int argc, char **argv[])&amp;#123;printf(&amp;quot;PE File Structure&amp;quot;);return 0;&amp;#125;
+Build the program in Visual Studio, PE file will be created i.e PEstructure.exe. Open the file in the PE View or CFF explorer. The PE View of PEstructure.exe mapped with the basic PE structure is depicted below.Fig. PE File StructureLets dive deep into the each component of the PE file formatDOS MZ HeaderThe first 64 bytes of the PE file is known as DOS MZ Header which is define in winnt.h or windows.inc . The member of DOS MZ header structure is shown below.
+123456789101112131415161718192021typedef struct _IMAGE_DOS_HEADER &amp;#123;      // DOS .EXE header    WORD   e_magic;                     // Magic number    WORD   e_cblp;                    // Bytes on last page of file    WORD   e_cp;                        // Pages in file    WORD   e_crlc;                      // Relocations    WORD   e_cparhdr;         // Size of header in paragraphs    WORD   e_minalloc;        // Minimum extra paragraphs needed    WORD   e_maxalloc;        // Maximum extra paragraphs needed    WORD   e_ss;              // Initial (relative) SS value    WORD   e_sp;                        // Initial SP value    WORD   e_csum;                      // Checksum    WORD   e_ip;                        // Initial IP value    WORD   e_cs;              // Initial (relative) CS value    WORD   e_lfarlc;          // File address of relocation table    WORD   e_ovno;                      // Overlay number    WORD   e_res[4];                    // Reserved words    WORD   e_oemid;           // OEM identifier (for e_oeminfo)    WORD   e_oeminfo;         // OEM information; e_oemid specific    WORD   e_res2[10];                  // Reserved words    LONG   e_lfanew;          // File address of new exe header  &amp;#125; IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
+Out of 19 members of the DOS MZ Header e_magic and e_lfanew is of our significant importance.
+e_magicIt is the first member of DOS MZ Header which is also known as magic number. It is a WORD therefore it consist of first 2 bytes “4D 5A” i.e “MZ”. Since Windows is little endian it is stored as “5A 4D” in PE file.The signature of PE file is “MZ” which stands for “Mark Zbikowski” the man behind the architecture of PE format. It is similar to the signature of other format like pdf → %pdf. This member tell us whether the file is a valid PE file or not."> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Understanding The PE File Format Structure - Part 1"/>
+  <meta property="og:site_name" content="k0x55aa"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="k0x55aa" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">k0x55aa</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> Understanding The PE File Format Structure - Part 1</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>When we load a CD or pendrive in a computer disc drive, the cpu understands what to do irrespective of the operating system i.e windows or linux. Similarly PE file is the executable file which can be loaded in the windows operating system. And the windows operating system knows what to do with PE file i.e “.exe” file.<br>Have you wonder what lies behind the windows executable file or PE file “.exe” . There often times, we will come across depending on the work like reversing a windows binary, programming a windows binary, analysing malware etc.<br>The main goal of this article is to understand the PE file structure and what can we do with the underlying structure of the PE file.</p>
+<h4 id="Basic-PE-File-Structure"><a href="#Basic-PE-File-Structure" class="headerlink" title="Basic PE File Structure"></a>Basic PE File Structure</h4><p>Windows has many flavors (Windows XP, Windows 7, Windows 10) so in order to support for all windows flavors the PE file format was created. To understand the PE format. Lets create a simple PE file PEstructure program in C</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main(int argc, char **argv[])</span><br><span class="line">&#123;</span><br><span class="line">printf(&quot;PE File Structure&quot;);</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Build the program in Visual Studio, PE file will be created i.e PEstructure.exe. Open the file in the PE View or CFF explorer. The PE View of PEstructure.exe mapped with the basic PE structure is depicted below.<br>Fig. PE File StructureLets dive deep into the each component of the PE file format<br>DOS MZ Header<br>The first 64 bytes of the PE file is known as DOS MZ Header which is define in winnt.h or windows.inc . The member of DOS MZ header structure is shown below.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_DOS_HEADER &#123;      // DOS .EXE header</span><br><span class="line">    WORD   e_magic;                     // Magic number</span><br><span class="line">    WORD   e_cblp;                    // Bytes on last page of file</span><br><span class="line">    WORD   e_cp;                        // Pages in file</span><br><span class="line">    WORD   e_crlc;                      // Relocations</span><br><span class="line">    WORD   e_cparhdr;         // Size of header in paragraphs</span><br><span class="line">    WORD   e_minalloc;        // Minimum extra paragraphs needed</span><br><span class="line">    WORD   e_maxalloc;        // Maximum extra paragraphs needed</span><br><span class="line">    WORD   e_ss;              // Initial (relative) SS value</span><br><span class="line">    WORD   e_sp;                        // Initial SP value</span><br><span class="line">    WORD   e_csum;                      // Checksum</span><br><span class="line">    WORD   e_ip;                        // Initial IP value</span><br><span class="line">    WORD   e_cs;              // Initial (relative) CS value</span><br><span class="line">    WORD   e_lfarlc;          // File address of relocation table</span><br><span class="line">    WORD   e_ovno;                      // Overlay number</span><br><span class="line">    WORD   e_res[4];                    // Reserved words</span><br><span class="line">    WORD   e_oemid;           // OEM identifier (for e_oeminfo)</span><br><span class="line">    WORD   e_oeminfo;         // OEM information; e_oemid specific</span><br><span class="line">    WORD   e_res2[10];                  // Reserved words</span><br><span class="line">    LONG   e_lfanew;          // File address of new exe header</span><br><span class="line">  &#125; IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;</span><br></pre></td></tr></table></figure>
+<p>Out of 19 members of the DOS MZ Header e_magic and e_lfanew is of our significant importance.</p>
+<h6 id="e-magic"><a href="#e-magic" class="headerlink" title="e_magic"></a>e_magic</h6><p>It is the first member of DOS MZ Header which is also known as magic number. It is a WORD therefore it consist of first 2 bytes “4D 5A” i.e “MZ”. Since Windows is little endian it is stored as “5A 4D” in PE file.<br>The signature of PE file is “MZ” which stands for “Mark Zbikowski” the man behind the architecture of PE format. It is similar to the signature of other format like pdf → %pdf. This member tell us whether the file is a valid PE file or not.</p>
+<h6 id="e-lfanew"><a href="#e-lfanew" class="headerlink" title="e_lfanew"></a>e_lfanew</h6><p>The last member of the DOS MZ Header is e_lfanew which is a DWORD that means it consist of last 4 bytes of the DOS MZ header. It holds the offset to the start of PE Header. This value is check by the PE loader of the windows system which offset to load for PE Header.</p>
+<h4 id="DOS-Stub"><a href="#DOS-Stub" class="headerlink" title="DOS Stub"></a>DOS Stub</h4><p>When we run the PEstructure.exe in a 16 bit machine DOSbox, It will prints “This program cannot be run in DOS mode” which is generally and error saying that the PEstructure.exe the main code cannot run in 16 bit msdos.<br>Now lets try to change the strings of our choice in the hexeditor, We can see our modified text below.<br>Copy the Dos stub and save it in the new file using hexeditor.<br>Now lets open the DOS stub in IDA Pro.<br>The first two line indicates that it is clearing the stack “push cs and pop ds”. Next instruction “mov dx, 0Eh” is the location of strings to look for which is stored in register “dx”. The instruction “mov ah, 9” prints the string present in “dx” to the commandline “int 21h” is msdos interrupt (API call). The instruction “mov ax, 4c01h” tells to terminate the program.<br>The best way to modify the dos stub is by writing a program in 16 bit dosbox and build it and link with the program you wanted to use “&#x2F;STUB:stub.exe”.<br>Takeaway: The Dos stub may sometimes contain useful information especially when we are solving some ctf challenges and which could sometimes only be seen when running in 16 bit msdos machine.</p>
+<h4 id="Rich-Header"><a href="#Rich-Header" class="headerlink" title="Rich Header"></a>Rich Header</h4><p>The Rich Header is the undocumented section between the DOS stub and PE Header, this header can only be found in Microsoft Visual Studio compile PE file. I didn’t knew about this header until I read the article “Devils in the rich header” where the OlympicDestroyer malware writer have embedded a fake header tricking the malware analyst to think that the attack comes from Lazarus group. It generates when we link the machine generate compile object file to an executable with Microsoft Visual studio. The metadata of the tool such as build number, version etc. It starts from offset x80 and ends at ascii string “Rich” followed by a 4 byte checksum &amp; decryption key. After which a 16 byte padding exist before the start of PE header.</p>
+<h4 id="PE-Header-NT-Header"><a href="#PE-Header-NT-Header" class="headerlink" title="PE Header&#x2F;NT Header"></a>PE Header&#x2F;NT Header</h4><p>The PE header aka NT Header is defined in the winnt.h, the structure of PE header has 3 members, the 32 bit and 64 bit structure is shown below</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_NT_HEADERS &#123;</span><br><span class="line">    DWORD Signature;</span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;</span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
+<h4 id="Signature"><a href="#Signature" class="headerlink" title="Signature"></a>Signature</h4><p>The signature of the PE header is a DWORD i.e 4 bytes. Its has a fixed value of “50 45 00 00” in ascii “PE\0\0” which represents the start of the PE header.<br>File Header<br>File Header is also known as the COFF header consist of 20 bytes of a PE file holds the information about the physical layout and properties of the PE file such as PointerToSymbolTable, NumberOfSections etc. The structure IMAGE_FILE_HEADER has 7 members in winnt.h as shown below.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_NT_HEADERS64 &#123;</span><br><span class="line">    DWORD Signature;</span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;</span><br><span class="line">    IMAGE_OPTIONAL_HEADER64 OptionalHeader;</span><br><span class="line">&#125; IMAGE_NT_HEADERS64, *PIMAGE_NT_HEADERS64;</span><br><span class="line"></span><br><span class="line">typedef struct _IMAGE_NT_HEADERS &#123;</span><br><span class="line">    DWORD Signature;</span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;</span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
+<h6 id="Machine"><a href="#Machine" class="headerlink" title="Machine"></a>Machine</h6><p>This member is a WORD that holds 2 bytes which tells us the information about the types of machine(CPU) i.e 0x8864 for AMD64 and 0x14c for i386</p>
+<h6 id="NumberOfSections"><a href="#NumberOfSections" class="headerlink" title="NumberOfSections"></a>NumberOfSections</h6><p>This members tell us the number of sections present in the section table</p>
+<h6 id="TimeDateStamp"><a href="#TimeDateStamp" class="headerlink" title="TimeDateStamp"></a>TimeDateStamp</h6><p>It tell us the information about the file when it was created.</p>
+<h6 id="PointerToSymbolTable-NumberOfSymbols"><a href="#PointerToSymbolTable-NumberOfSymbols" class="headerlink" title="PointerToSymbolTable &amp; NumberOfSymbols"></a>PointerToSymbolTable &amp; NumberOfSymbols</h6><p>PointerToSymbolTable holds the offset of the entrypoint to the COFF symbol table and NumberOfsymbols holds value of number of entries to the COFF symbol table.</p>
+<h6 id="SizeOfOptionalHeader"><a href="#SizeOfOptionalHeader" class="headerlink" title="SizeOfOptionalHeader"></a>SizeOfOptionalHeader</h6><p>It hold the size of optional header value.<br>Characteristics: It contains a flag which determines whether the file is PE executable or a dll file. Characteristics</p>
+<h6 id="Optional-Header"><a href="#Optional-Header" class="headerlink" title="Optional Header"></a>Optional Header</h6><p>When a PE file loader loads the PE file, it requires various information like what address should the loader execute, whether the PE file is a GUI, console, driver etc. All this information can be found in the Optional Header which we discuss. The structure of Optional Header is depicted below.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_OPTIONAL_HEADER &#123;</span><br><span class="line">    WORD    Magic;</span><br><span class="line">    BYTE    MajorLinkerVersion;</span><br><span class="line">    BYTE    MinorLinkerVersion;</span><br><span class="line">    DWORD   SizeOfCode;</span><br><span class="line">    DWORD   SizeOfInitializedData;</span><br><span class="line">    DWORD   SizeOfUninitializedData;</span><br><span class="line">    DWORD   AddressOfEntryPoint;</span><br><span class="line">    DWORD   BaseOfCode;</span><br><span class="line">    DWORD   BaseOfData;</span><br><span class="line">    DWORD   ImageBase;</span><br><span class="line">    DWORD   SectionAlignment;</span><br><span class="line">    DWORD   FileAlignment;</span><br><span class="line">    WORD    MajorOperatingSystemVersion;</span><br><span class="line">    WORD    MinorOperatingSystemVersion;</span><br><span class="line">    WORD    MajorImageVersion;</span><br><span class="line">    WORD    MinorImageVersion;</span><br><span class="line">    WORD    MajorSubsystemVersion;</span><br><span class="line">    WORD    MinorSubsystemVersion;</span><br><span class="line">    DWORD   Win32VersionValue;</span><br><span class="line">    DWORD   SizeOfImage;</span><br><span class="line">    DWORD   SizeOfHeaders;</span><br><span class="line">    DWORD   CheckSum;</span><br><span class="line">    WORD    Subsystem;</span><br><span class="line">    WORD    DllCharacteristics;</span><br><span class="line">    DWORD   SizeOfStackReserve;</span><br><span class="line">    DWORD   SizeOfStackCommit;</span><br><span class="line">    DWORD   SizeOfHeapReserve;</span><br><span class="line">    DWORD   SizeOfHeapCommit;</span><br><span class="line">    DWORD   LoaderFlags;</span><br><span class="line">    DWORD   NumberOfRvaAndSizes;</span><br><span class="line">    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];</span><br><span class="line">&#125; IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;</span><br><span class="line">typedef struct _IMAGE_OPTIONAL_HEADER64 &#123;</span><br><span class="line">    WORD        Magic;</span><br><span class="line">    BYTE        MajorLinkerVersion;</span><br><span class="line">    BYTE        MinorLinkerVersion;</span><br><span class="line">    DWORD       SizeOfCode;</span><br><span class="line">    DWORD       SizeOfInitializedData;</span><br><span class="line">    DWORD       SizeOfUninitializedData;</span><br><span class="line">    DWORD       AddressOfEntryPoint;</span><br><span class="line">    DWORD       BaseOfCode;</span><br><span class="line">    ULONGLONG   ImageBase;</span><br><span class="line">    DWORD       SectionAlignment;</span><br><span class="line">    DWORD       FileAlignment;</span><br><span class="line">    WORD        MajorOperatingSystemVersion;</span><br><span class="line">    WORD        MinorOperatingSystemVersion;</span><br><span class="line">    WORD        MajorImageVersion;</span><br><span class="line">    WORD        MinorImageVersion;</span><br><span class="line">    WORD        MajorSubsystemVersion;</span><br><span class="line">    WORD        MinorSubsystemVersion;</span><br><span class="line">    DWORD       Win32VersionValue;</span><br><span class="line">    DWORD       SizeOfImage;</span><br><span class="line">    DWORD       SizeOfHeaders;</span><br><span class="line">    DWORD       CheckSum;</span><br><span class="line">    WORD        Subsystem;</span><br><span class="line">    WORD        DllCharacteristics;</span><br><span class="line">    ULONGLONG   SizeOfStackReserve;</span><br><span class="line">    ULONGLONG   SizeOfStackCommit;</span><br><span class="line">    ULONGLONG   SizeOfHeapReserve;</span><br><span class="line">    ULONGLONG   SizeOfHeapCommit;</span><br><span class="line">    DWORD       LoaderFlags;</span><br><span class="line">    DWORD       NumberOfRvaAndSizes;</span><br><span class="line">    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];</span><br><span class="line">&#125; IMAGE_OPTIONAL_HEADER64, *PIMAGE_OPTIONAL_HEADER64;</span><br></pre></td></tr></table></figure>
+<h6 id="Magic"><a href="#Magic" class="headerlink" title="Magic"></a>Magic</h6><p>It tell us about whether the PE file is PE32 , PE32+, ROM image i.e 0x10B &#x3D; PE32, 0x20B &#x3D; PE32+, 0x107 &#x3D; ROM image<br>MajorLinkerVersion and MinorLinkerVersion : The linker major and minor version numbers.</p>
+<h6 id="SizeOfCode"><a href="#SizeOfCode" class="headerlink" title="SizeOfCode"></a>SizeOfCode</h6><p>It holds the value of the size of the code (text) section, or the sum of all code sections if there are multiple sections.</p>
+<h6 id="SizeOfUninitializedData"><a href="#SizeOfUninitializedData" class="headerlink" title="SizeOfUninitializedData"></a>SizeOfUninitializedData</h6><p>This field holds the size of the uninitialized data section (BSS), or the sum of all such sections if there are multiple BSS sections.</p>
+<h6 id="AddressOfEntryPoint"><a href="#AddressOfEntryPoint" class="headerlink" title="AddressOfEntryPoint"></a>AddressOfEntryPoint</h6><p>It is the address where the execution of file starts when loaded into the memory. We can tell the PE file which section to start as entry point to execute the code. The value is generally used by packers which points the AddressofEntryPoint to the value or the address to the decompression stub of the packer.</p>
+<h6 id="BaseOfCode"><a href="#BaseOfCode" class="headerlink" title="BaseOfCode"></a>BaseOfCode</h6><p>An RVA of the start of the code section when the file is loaded into memory.<br>BaseOfData (PE32 Only): An RVA of the start of the data section when the file is loaded into memory.<br>ImageBase: It is the preferred load address of the PE file. Nowadays due to ASLR, the file won’t load at the ImageBase address. But if we disable ASLR, 99% of the time the image will load at this address 0x400000 for PE32 executable, 0x140000000 for PE32+</p>
+<h6 id="SectionAlignment"><a href="#SectionAlignment" class="headerlink" title="SectionAlignment"></a>SectionAlignment</h6><p>It is the alignment of sections when loaded into the memory. Eg: If this value contains 0x1000, then each of the section should started with a multiple of 0x1000. If the first section starts at 0x400000 then the next section much be at 0x401000.<br>FileAlignment: The alignment of sections in the file. If the value of FileAlignment is 0x200, then each of the section should started with multiple of 0x200 i.e 0x400 in the next section.</p>
+<h6 id="SizeOfImage"><a href="#SizeOfImage" class="headerlink" title="SizeOfImage"></a>SizeOfImage</h6><p>The overall size of the PE file when it is loaded into the memory. It is sum of all the headers and the section alignment</p>
+<h6 id="SizeOfHeaders"><a href="#SizeOfHeaders" class="headerlink" title="SizeOfHeaders"></a>SizeOfHeaders</h6><p>It is sum of the size of DOS header, PE headers and Sections Table. Its value is equal to file size minus all the size of sections in the file.</p>
+<h6 id="Checksum"><a href="#Checksum" class="headerlink" title="Checksum"></a>Checksum</h6><p>It is the checksum of the image file.</p>
+<h6 id="Subsytem"><a href="#Subsytem" class="headerlink" title="Subsytem"></a>Subsytem</h6><p>This value tells us about the type of subsytem the file will use once loaded such as 0x3 &#x3D; console, 0x2 &#x3D; gui, 0xE &#x3D; xbox application, etc.<br>Since this article is getting lengthy, I will try to divide this into two parts. So far we have learned the DOS HEADER, RICH HEADER, PE HEADER, rest of things will be covered in the next part.</p>
+<p>Reference</p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format">PE-FORMAT</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.delphibasics.info/home/delphibasicsarticles/anin-depthlookintothewin32portableexecutablefileformat-part1">WIN32 PE</a></p>
+
+	  <div class="article-footer-copyright">
+
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"></a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a href="/2024/02/10/antivirus1/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2024/01/13/IoT-Notes/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2024-01-13 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/WINDOWS/">WINDOWS<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2024 k0x55aa's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"https://raw.githubusercontent.com/iCharlesZ/vscode-live2d-models/master/model-library/girls-frontline/M4-SOPMOD-II-2/normal/model.json"},"display":{"position":"right","superSample":2,"width":200,"height":450,"hOffset":30,"vOffset":-20},"mobile":{"position":"bottom","width":100,"height":100,"show":true,"scale":0.5,"hOffset":1,"vOffset":-1},"react":{"opacityDefault":1,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body>
+   </html>

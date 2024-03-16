@@ -1,0 +1,371 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>k0x55aa</title>
+  <meta name="author" content="k0x55aa">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="k0x55aa"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="k0x55aa" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">k0x55aa</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 <div class="page-header logo">
+  <h1>k0x55aa<span class="blink-fast">|</span></h1>
+</div>
+
+<div class="row page">
+
+	
+	<div class="col-md-9">
+	
+
+		<div class="slogan">
+
+
+		<i class="fa fa-heart blink-slow"></i>
+
+		You must understand that there is more than one path to the top of the mountain - Miyamoto Musashi
+
+</div>    
+
+		<div id="top_search"></div>
+		<div class="mypage">
+		
+		<!-- title and entry -->
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
+			<a href="/2024/02/10/antivirus1/" >How To Write An Anti-Virus Program - I</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-02-10  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>You open your mail suddenly you saw a mail from your impersonating  friend with a attachment file containing zip. When you unzip the file, you clicked it. Unfortunately the file that you clicked is a malware. And none of Antivirus software signature works.</p>
+<p>There are often time comes when we have to write our own signature to kill the malware that is present in the computer.</p>
+<p>Here is a small program in rust which will add registry key <code>Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code></p>
+<p>to the machine. And then print <strong>hello</strong> wait for 10 minutes and print <strong>goodbye.</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">use winreg::enums::*;</span><br><span class="line">use winreg::RegKey;</span><br><span class="line">use std::time::Duration;</span><br><span class="line">use std::thread;</span><br><span class="line"></span><br><span class="line">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; &#123;</span><br><span class="line"></span><br><span class="line">    let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);</span><br><span class="line">    let (settings, _) = hklm.create_subkey(&quot;Software\\Microsoft\\Windows\\CurrentVersion\\Run&quot;)?;</span><br><span class="line"></span><br><span class="line">    // Set the program to run at startup</span><br><span class="line">    settings.set_value(&quot;virus&quot;, &amp;&quot;C:\\Tools\\pestudio\\pestudio\\pestudio.exe&quot;)?;</span><br><span class="line"></span><br><span class="line">    println!(&quot;hello&quot;);</span><br><span class="line">    thread::sleep(Duration::from_secs(600));</span><br><span class="line">    println!(&quot;goodbye&quot;);</span><br><span class="line">    Ok(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The registry <code>Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code> will run the program  <code>C:\Tools\pestudio\pestudio\pestudio.exe</code> during the startup of the machine.</p>
+<p>If we open registry editor we will be able to see the key being added which starts the program during the startup of the machine.</p>
+<p><img src="/2024/02/10/antivirus1/anitivirus1.png" alt="alt text"></p>
+<p>To delete the virus program key so that the virus won’t run during the startup we have to delete the key that is present in the “virus” and the file that points to virus. Below program will delete the key and virus file.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">use winreg::enums::*;</span><br><span class="line">use std::fs;</span><br><span class="line">use winreg::RegKey;</span><br><span class="line"></span><br><span class="line">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; &#123;</span><br><span class="line">    let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);</span><br><span class="line">    let run_key = r&quot;Software\Microsoft\Windows\CurrentVersion\Run&quot;;</span><br><span class="line">    let run_key = hklm.open_subkey_with_flags(run_key, KEY_SET_VALUE)?;</span><br><span class="line"></span><br><span class="line">    // Delete the program from startup</span><br><span class="line">    run_key.delete_value(&quot;virus&quot;)?;</span><br><span class="line">    fs::remove_file(&quot;C:\\Tools\\pestudio\\pestudio\\pestudio.exe&quot;)?;</span><br><span class="line"></span><br><span class="line">    Ok(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+	
+	</div>
+  <a type="button" href="/2024/02/10/antivirus1/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
+			<a href="/2024/01/13/pe-structure1/" >Understanding The PE File Format Structure - Part 1</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-01-13  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>When we load a CD or pendrive in a computer disc drive, the cpu understands what to do irrespective of the operating system i.e windows or linux. Similarly PE file is the executable file which can be loaded in the windows operating system. And the windows operating system knows what to do with PE file i.e “.exe” file.<br>Have you wonder what lies behind the windows executable file or PE file “.exe” . There often times, we will come across depending on the work like reversing a windows binary, programming a windows binary, analysing malware etc.<br>The main goal of this article is to understand the PE file structure and what can we do with the underlying structure of the PE file.</p>
+<h4 id="Basic-PE-File-Structure"><a href="#Basic-PE-File-Structure" class="headerlink" title="Basic PE File Structure"></a>Basic PE File Structure</h4><p>Windows has many flavors (Windows XP, Windows 7, Windows 10) so in order to support for all windows flavors the PE file format was created. To understand the PE format. Lets create a simple PE file PEstructure program in C</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main(int argc, char **argv[])</span><br><span class="line">&#123;</span><br><span class="line">printf(&quot;PE File Structure&quot;);</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Build the program in Visual Studio, PE file will be created i.e PEstructure.exe. Open the file in the PE View or CFF explorer. The PE View of PEstructure.exe mapped with the basic PE structure is depicted below.<br>Fig. PE File StructureLets dive deep into the each component of the PE file format<br>DOS MZ Header<br>The first 64 bytes of the PE file is known as DOS MZ Header which is define in winnt.h or windows.inc . The member of DOS MZ header structure is shown below.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_DOS_HEADER &#123;      // DOS .EXE header</span><br><span class="line">    WORD   e_magic;                     // Magic number</span><br><span class="line">    WORD   e_cblp;                    // Bytes on last page of file</span><br><span class="line">    WORD   e_cp;                        // Pages in file</span><br><span class="line">    WORD   e_crlc;                      // Relocations</span><br><span class="line">    WORD   e_cparhdr;         // Size of header in paragraphs</span><br><span class="line">    WORD   e_minalloc;        // Minimum extra paragraphs needed</span><br><span class="line">    WORD   e_maxalloc;        // Maximum extra paragraphs needed</span><br><span class="line">    WORD   e_ss;              // Initial (relative) SS value</span><br><span class="line">    WORD   e_sp;                        // Initial SP value</span><br><span class="line">    WORD   e_csum;                      // Checksum</span><br><span class="line">    WORD   e_ip;                        // Initial IP value</span><br><span class="line">    WORD   e_cs;              // Initial (relative) CS value</span><br><span class="line">    WORD   e_lfarlc;          // File address of relocation table</span><br><span class="line">    WORD   e_ovno;                      // Overlay number</span><br><span class="line">    WORD   e_res[4];                    // Reserved words</span><br><span class="line">    WORD   e_oemid;           // OEM identifier (for e_oeminfo)</span><br><span class="line">    WORD   e_oeminfo;         // OEM information; e_oemid specific</span><br><span class="line">    WORD   e_res2[10];                  // Reserved words</span><br><span class="line">    LONG   e_lfanew;          // File address of new exe header</span><br><span class="line">  &#125; IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;</span><br></pre></td></tr></table></figure>
+<p>Out of 19 members of the DOS MZ Header e_magic and e_lfanew is of our significant importance.</p>
+<h6 id="e-magic"><a href="#e-magic" class="headerlink" title="e_magic"></a>e_magic</h6><p>It is the first member of DOS MZ Header which is also known as magic number. It is a WORD therefore it consist of first 2 bytes “4D 5A” i.e “MZ”. Since Windows is little endian it is stored as “5A 4D” in PE file.<br>The signature of PE file is “MZ” which stands for “Mark Zbikowski” the man behind the architecture of PE format. It is similar to the signature of other format like pdf → %pdf. This member tell us whether the file is a valid PE file or not.</p>
+	
+	</div>
+  <a type="button" href="/2024/01/13/pe-structure1/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
+			<a href="/2024/01/13/IoT-Notes/" >IoT Notes</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-01-13  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<hr>
+<h2 id="Binwalk"><a href="#Binwalk" class="headerlink" title="Binwalk"></a>Binwalk</h2><p>The operating system deletes system files directory such as <code>/sys</code> <code>/proc</code> <code>/dev</code>. To preserve the sym links when extracting rootfs with binwalk we use</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk --perserve-symlinks -e &lt;firmware file&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Qemu"><a href="#Qemu" class="headerlink" title="Qemu"></a>Qemu</h2><p>Quick static binary emulation</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-arm-static -L arm-rootfs ./staticbinary</span><br></pre></td></tr></table></figure>
+
+	
+	</div>
+  <a type="button" href="/2024/01/13/IoT-Notes/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+
+		</div>
+
+		<!-- pagination -->
+		<div>
+  		<center>
+		<div class="pagination">
+
+   
+</div>
+
+  		</center>
+		</div>
+
+		
+		
+	</div> <!-- col-md-9 -->
+
+	
+		<div class="col-md-3">
+	<div id="sidebar">
+	
+			
+  <div id="site_search">
+   <div class="form-group">
+    <input type="text" id="local-search-input" name="q" results="0" placeholder="Search" class="st-search-input st-default-search-input form-control"/>
+   </div>  
+  <div id="local-search-result"></div>
+  </div>
+
+
+		
+			
+		
+			
+	<div class="widget">
+		<h4>Tag Cloud</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/WINDOWS/">WINDOWS<span>1</span></a></li>
+		
+			<li><a href="/tags/IoT/">IoT<span>1</span></a></li>
+		
+		 
+		</ul>
+	</div>
+
+
+		
+			
+<div class="widget">
+  <h4>Recent Posts</h4>
+  <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2024/02/10/antivirus1/" ><i class="fa fa-file-o"></i>How To Write An Anti-Virus ...</a>
+      </li>
+    
+      <li>
+        <a href="/2024/01/13/pe-structure1/" ><i class="fa fa-file-o"></i>Understanding The PE File F...</a>
+      </li>
+    
+      <li>
+        <a href="/2024/01/13/IoT-Notes/" ><i class="fa fa-file-o"></i>IoT Notes</a>
+      </li>
+    
+  </ul>
+</div>
+
+		
+			
+<div class="widget">
+	<h4>Links</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li><i class="false"></i><a href="https://github.com/k0x55aa" title="" target="_blank"]);">github</a></li>
+	
+	</ul>
+</div>
+
+
+		
+	</div> <!-- sidebar -->
+</div> <!-- col-md-3 -->
+
+	
+	
+</div> <!-- row-fluid -->
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2024 k0x55aa's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"https://raw.githubusercontent.com/iCharlesZ/vscode-live2d-models/master/model-library/girls-frontline/M4-SOPMOD-II-2/normal/model.json"},"display":{"position":"right","superSample":2,"width":200,"height":450,"hOffset":30,"vOffset":-20},"mobile":{"position":"bottom","width":100,"height":100,"show":true,"scale":0.5,"hOffset":1,"vOffset":-1},"react":{"opacityDefault":1,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body>
+   </html>
