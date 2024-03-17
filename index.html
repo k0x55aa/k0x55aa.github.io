@@ -137,6 +137,41 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2024/03/17/screenctf/" >CTF - LEVEL 101</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-03-17  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>Today I’m going to publish a ctf that I play last year LEVEL 101. Hope someone can learn something from it.</p>
+<h1 id="Challenge-bhooth"><a href="#Challenge-bhooth" class="headerlink" title="Challenge - bhooth"></a>Challenge - bhooth</h1><p>Clicking the challenge bhooth we are presented with dashboard to launch the instance.</p>
+<p><img src="/2024/03/17/screenctf/screenctf1.png" alt="alt text"></p>
+<p>After launching the instance of the challenge, we are presented with an url: screenctf.com:20085 browsing through the challenge, we are presented with a message “Firstly you need to solve me and I will help you out. What you see has everything to answer this problem” which is an html message which means the viewing the source  won’t find anything interesting.</p>
+<p><img src="/2024/03/17/screenctf/screenctf2.png" alt="alt text"></p>
+<p>Let’s try to intercept the traffic with burpsuite and see if we are able to find anything of our interest. Intercepting the traffic with the burpsuite and looking the response we see that it will assign us a cookie. Set-cookie: abc&#x3D;Ymhvb3RodW5tYWlu</p>
+<p><img src="/2024/03/17/screenctf/screenctf3.png" alt="alt text"></p>
+<p>Taking a look a the cookie we can guess that it’s a base64 encoded string, so let’s try to decode the cookie, Once the cookie has been decoded, we get the string “bhoothunmain”</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;Ymhvb3RodW5tYWlu&quot;</span> | <span class="built_in">base64</span> -d</span><br><span class="line">bhoothunmain</span><br></pre></td></tr></table></figure>
+	
+	</div>
+  <a type="button" href="/2024/03/17/screenctf/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2024/03/16/format-string1/" >Format String - GOT Overwrite</a>
 		</h3>
 		</div>
@@ -313,15 +348,15 @@
 		
 			<li><a href="/tags/WINDOWS/">WINDOWS<span>1</span></a></li>
 		
+			<li><a href="/tags/IoT/">IoT<span>1</span></a></li>
+		
 			<li><a href="/tags/ctf/">ctf<span>1</span></a></li>
 		
-			<li><a href="/tags/IoT/">IoT<span>1</span></a></li>
+			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
 		
 			<li><a href="/tags/exploit/">exploit<span>1</span></a></li>
 		
 			<li><a href="/tags/linux/">linux<span>1</span></a></li>
-		
-			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
 		
 		 
 		</ul>
@@ -333,6 +368,10 @@
 <div class="widget">
   <h4>Recent Posts</h4>
   <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2024/03/17/screenctf/" ><i class="fa fa-file-o"></i>CTF - LEVEL 101</a>
+      </li>
     
       <li>
         <a href="/2024/03/16/format-string1/" ><i class="fa fa-file-o"></i>Format String - GOT Overwrite</a>
