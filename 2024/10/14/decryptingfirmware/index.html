@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>Decrypting An Encrypted Firmware (DIR842) | k0x55aa</title>
+  <meta name="author" content="k0x55aa">
+  
+  <meta name="description" content="To download the firmware copy the firmware version shown below from the D-Link FTP Server
+
+unzip the file DIR-842_REVC_FIRMWARE_v3.13B05.zip and run binwalk on the extracted file
+123456┌──(kali㉿kali)-[~/DIR842]└─$ binwalk DIR842C1_FW313WWb05.binDECIMAL       HEXADECIMAL     DESCRIPTION--------------------------------------------------------------------------------
+
+As we can see that our file firmware DIR842C1_FW313WWb05.bin is encrypted.
+Now let’s Unzip the file DIR-842_REVC_FIRMWARE_v3.10B05.zip and extract the filesystem of DIR842C1_FW302b03_middle.bin using binwalk
+1234567891011┌──(kali㉿kali)-[~/DIR842]                                                                                                                                                                                                        └─$ sudo binwalk -e --preserve-symlinks --run-as=root DIR842C1_FW302b03_middle.bin[sudo] password for kali:                                                                                                                                                                                                                                                                                                                                                                                                                                                             DECIMAL       HEXADECIMAL     DESCRIPTION                                                                                                                                                                                                  --------------------------------------------------------------------------------                                                                                                                                                           0             0x0             DLOB firmware header, boot partition: &amp;quot;dev=/dev/mtdblock/5&amp;quot;                                                                                                                                                  112           0x70            uImage header, header size: 64 bytes, header CRC: 0xA33A0532, created: 2018-07-02 07:26:57, image size: 1234680 bytes, Data Address: 0x80060000, Entry Point: 0x80060000, data CRC: 0xE2D6A8D0, OS: Linux, CPU: MIPS, image type: Multi-File Image, compression type: lzma, image name: &amp;quot;MIPS Seattle Linux-3.3.8&amp;quot;                                                                                                                                      184           0xB8            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 3641936 bytes                                                                                                     1245296       0x130070        PackImg section delimiter tag, little endian size: 11572736 bytes; big endian size: 9875456 bytes                                                                                                            1245328       0x130090        Squashfs filesystem, little endian, version 4.0, compression:xz, size: 9872196 bytes, 2533 inodes, blocksize: 131072 bytes, created: 2018-07-02 07:27:09
+Go to extracted file system and identify the architecture by using file command of it’s busybox binary
+123┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]└─$ file bin/busybox bin/busybox: ELF 32-bit MSB executable, MIPS, MIPS32 rel2 version 1 (SYSV), statically linked, stripped
+
+As we can see that the architecture is mips32 . Let’s try to run the busybox using qemu-mips-static"> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Decrypting An Encrypted Firmware (DIR842)"/>
+  <meta property="og:site_name" content="k0x55aa"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="k0x55aa" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">k0x55aa</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> Decrypting An Encrypted Firmware (DIR842)</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>To download the firmware copy the firmware version shown below from the <a href="ftp://ftp2.dlink.com/PRODUCTS/DIR-842/REVC/">D-Link FTP Server</a></p>
+<p><img src="/2024/10/14/decryptingfirmware/image.png" alt="alt text"></p>
+<p>unzip the file <code>DIR-842_REVC_FIRMWARE_v3.13B05.zip</code> and run binwalk on the extracted file</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842]</span><br><span class="line">└─$ binwalk DIR842C1_FW313WWb05.bin</span><br><span class="line"></span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>As we can see that our file firmware <code>DIR842C1_FW313WWb05.bin</code> is encrypted.</p>
+<p>Now let’s Unzip the file <code>DIR-842_REVC_FIRMWARE_v3.10B05.zip</code> and extract the filesystem of <code>DIR842C1_FW302b03_middle.bin</code> using <code>binwalk</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842]                                                                                                                                                                                                        </span><br><span class="line">└─$ sudo binwalk -e --preserve-symlinks --run-as=root DIR842C1_FW302b03_middle.bin</span><br><span class="line">[sudo] password <span class="keyword">for</span> kali:                                                                                                                                                                                                                  </span><br><span class="line">                                                                                                                                                                                                                                           </span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION                                                                                                                                                                                                  </span><br><span class="line">--------------------------------------------------------------------------------                                                                                                                                                           </span><br><span class="line">0             0x0             DLOB firmware header, boot partition: <span class="string">&quot;dev=/dev/mtdblock/5&quot;</span>                                                                                                                                                  </span><br><span class="line">112           0x70            uImage header, header size: 64 bytes, header CRC: 0xA33A0532, created: 2018-07-02 07:26:57, image size: 1234680 bytes, Data Address: 0x80060000, Entry Point: 0x80060000, data CRC: 0xE2D6A8D0, OS: Linux, CPU: MIPS, image <span class="built_in">type</span>: Multi-File Image, compression <span class="built_in">type</span>: lzma, image name: <span class="string">&quot;MIPS Seattle Linux-3.3.8&quot;</span>                                                                                                                                      </span><br><span class="line">184           0xB8            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 3641936 bytes                                                                                                     </span><br><span class="line">1245296       0x130070        PackImg section delimiter tag, little endian size: 11572736 bytes; big endian size: 9875456 bytes                                                                                                            </span><br><span class="line">1245328       0x130090        Squashfs filesystem, little endian, version 4.0, compression:xz, size: 9872196 bytes, 2533 inodes, blocksize: 131072 bytes, created: 2018-07-02 07:27:09</span><br></pre></td></tr></table></figure>
+<p>Go to extracted file system and identify the architecture by using <code>file</code> command of it’s busybox binary</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ file bin/busybox </span><br><span class="line">bin/busybox: ELF 32-bit MSB executable, MIPS, MIPS32 rel2 version 1 (SYSV), statically linked, stripped</span><br></pre></td></tr></table></figure>
+
+<p>As we can see that the architecture is <code>mips32</code> . Let’s try to run the busybox using <code>qemu-mips-static</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ qemu-mips-static -L . ./bin/busybox </span><br><span class="line">BusyBox v1.22.1 (2018-07-02 15:18:10 CST) multi-call binary.</span><br><span class="line">BusyBox is copyrighted by many authors between 1998-2012.</span><br><span class="line">Licensed under GPLv2. See <span class="built_in">source</span> distribution <span class="keyword">for</span> detailed</span><br><span class="line">copyright notices.</span><br><span class="line"></span><br><span class="line">Usage: busybox [<span class="keyword">function</span> [arguments]...]</span><br><span class="line">   or: busybox --list</span><br><span class="line">   or: <span class="keyword">function</span> [arguments]...</span><br><span class="line"></span><br><span class="line">        BusyBox is a multi-call binary that combines many common Unix</span><br><span class="line">        utilities into a single executable.  Most people will create a</span><br><span class="line">        <span class="built_in">link</span> to busybox <span class="keyword">for</span> each <span class="keyword">function</span> they wish to use and BusyBox</span><br><span class="line">        will act like whatever it was invoked as.</span><br><span class="line"></span><br><span class="line">Currently defined <span class="built_in">functions</span>:</span><br><span class="line">        [, [[, addgroup, adduser, arp, ash, awk, <span class="built_in">base64</span>, <span class="built_in">basename</span>, bunzip2, bzcat, bzip2, <span class="built_in">cat</span>, <span class="built_in">chmod</span>, chpasswd, cmp, <span class="built_in">cp</span>, cryptpw, <span class="built_in">cut</span>, <span class="built_in">date</span>, <span class="built_in">dd</span>, delgroup, deluser, dnsdomainname, <span class="built_in">echo</span>, egrep, <span class="built_in">expr</span>, <span class="literal">false</span>, fgrep, free, grep, gunzip,</span><br><span class="line">        gzip, halt, hostname, ifconfig, ifplugd, init, insmod, ip, ipaddr, iplink, iproute, iprule, iptunnel, <span class="built_in">kill</span>, killall, killall5, <span class="built_in">ln</span>, <span class="built_in">ls</span>, lsmod, <span class="built_in">mkdir</span>, <span class="built_in">mknod</span>, mkpasswd, modinfo, modprobe, mount, <span class="built_in">mv</span>, netstat, passwd, ping, ping6,</span><br><span class="line">        poweroff, ps, <span class="built_in">pwd</span>, reboot, <span class="built_in">rm</span>, rmmod, route, sed, sh, <span class="built_in">sleep</span>, <span class="built_in">sync</span>, sysctl, tar, <span class="built_in">test</span>, top, <span class="built_in">touch</span>, <span class="built_in">tr</span>, <span class="literal">true</span>, tunctl, umount, <span class="built_in">uname</span>, <span class="built_in">uptime</span>, vconfig, <span class="built_in">wc</span>, wget, wget, xargs, <span class="built_in">yes</span>, zcat</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Now let’s try to find the string <code>decrypt</code> in the <code>squashfs-root</code> using grep</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ grep -r decrypt</span><br><span class="line">......</span><br><span class="line">grep: usr/sbin/encimg: binary file matches</span><br><span class="line">etc/scripts/decrypt_config.sh:<span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$filename</span>] decrypt!&quot;</span> &gt; /dev/console</span><br></pre></td></tr></table></figure>
+
+<p>There are many out of which the interesting match is <code>encimg</code> file. let’s try to run with <code>qemu-mips-static</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ qemu-mips-static -L . ./usr/sbin/encimg </span><br><span class="line">./usr/sbin/encimg: cache <span class="string">&#x27;/etc/ld.so.cache&#x27;</span> is corrupt</span><br><span class="line">no signature specified!</span><br><span class="line">Usage: encimg &#123;OPTIONS&#125;</span><br><span class="line">   -h                      : show this message.</span><br><span class="line">   -v                      : Verbose mode.</span><br><span class="line">   -i &#123;input image file&#125;   : input image file.</span><br><span class="line">   -e                      : encode file.</span><br><span class="line">   -d                      : decode file.</span><br><span class="line">   -s                      : signature.</span><br></pre></td></tr></table></figure>
+
+<p>Copy the the firmware file to <code>squashfs-root</code> directory</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ sudo <span class="built_in">cp</span>  ../../DIR842C1_FW313WWb05.bin ./  </span><br></pre></td></tr></table></figure>
+<p>Now if we try to run with <code>qemu-mips-static</code> we get an error</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ sudo qemu-mips-static -L . ./usr/sbin/encimg -d  -i ./DIR842C1_FW313WWb05.bin                                                                                                                                                       </span><br><span class="line">[sudo] password <span class="keyword">for</span> kali: </span><br><span class="line">./usr/sbin/encimg: cache <span class="string">&#x27;/etc/ld.so.cache&#x27;</span> is corrupt</span><br><span class="line">no signature specified!</span><br><span class="line">Usage: encimg &#123;OPTIONS&#125;</span><br><span class="line">   -h                      : show this message.</span><br><span class="line">   -v                      : Verbose mode.</span><br><span class="line">   -i &#123;input image file&#125;   : input image file.</span><br><span class="line">   -e                      : encode file.</span><br><span class="line">   -d                      : decode file.</span><br><span class="line">   -s                      : signature.</span><br></pre></td></tr></table></figure>
+<p>Now copy the <code>qemu-mips-static</code> to the <code>squashfs-root</code> , use <code>chroot</code> to open up a shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ sudo <span class="built_in">chroot</span> . ./qemu-mips-static ./bin/sh                                                                                                                                                                                               </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BusyBox v1.22.1 (2018-07-02 15:18:10 CST) built-in shell (ash)</span><br><span class="line">Enter <span class="string">&#x27;help&#x27;</span> <span class="keyword">for</span> a list of built-in commands.</span><br><span class="line"></span><br><span class="line"><span class="comment"># ls</span></span><br><span class="line">mnt                      home                     bin                      usr                      www                      sbin                     dev                      lib</span><br><span class="line">etc                      qemu-mips-static         tmp                      DIR842C1_FW313WWb05.bin  sys                      htdocs                   proc                     var</span><br><span class="line"></span><br><span class="line"><span class="comment"># encimg -d -i DIR842C1_FW313WWb05.bin </span></span><br><span class="line">no signature specified!</span><br><span class="line">Usage: encimg &#123;OPTIONS&#125;</span><br><span class="line">   -h                      : show this message.</span><br><span class="line">   -v                      : Verbose mode.</span><br><span class="line">   -i &#123;input image file&#125;   : input image file.</span><br><span class="line">   -e                      : encode file.</span><br><span class="line">   -d                      : decode file.</span><br><span class="line">   -s                      : signature.</span><br></pre></td></tr></table></figure>
+
+<p>As we can see that when trying to decrypt it says that <code>no signature specified!</code> which means we need the signature in order to decrypt the firmware. Let’s try to find the signature by search for <code>decrypt</code> string once again.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ grep -r decrypt</span><br><span class="line">......</span><br><span class="line">etc/scripts/decrypt_config.sh:<span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$filename</span>] decrypt!&quot;</span> &gt; /dev/console</span><br></pre></td></tr></table></figure>
+<p>Let’s try to open up the bash file, as we can see from below <code>image_sign</code> looks interesting</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ <span class="built_in">cat</span> etc/scripts/decrypt_config.sh</span><br><span class="line"><span class="comment">#!/bin/bash </span></span><br><span class="line">sign=`xmldbc -g /runtime/device/image_sign`</span><br><span class="line">tpyrcrsu 4</span><br><span class="line">key=`<span class="built_in">cat</span> /tmp/imagesign`</span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">openssl enc -aes-256-cbc -<span class="keyword">in</span> <span class="variable">$filename</span> -out /var/config_.xml.gz -d -k <span class="variable">$key</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$filename</span>] decrypt!&quot;</span> &gt; /dev/console</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>Now if we once again search for string <code>image_sign</code> using grep.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ grep -r image_sign</span><br><span class="line">grep: htdocs/cgibin: binary file matches</span><br><span class="line">grep: usr/sbin/rgbin: binary file matches</span><br><span class="line">etc/scripts/dlcfg_hlper.sh:sign=`xmldbc -g /runtime/device/image_sign`</span><br><span class="line">etc/scripts/decrypt_config.sh:sign=`xmldbc -g /runtime/device/image_sign`</span><br><span class="line">etc/defnodes/S20device.xml:                     &lt;image_sign get=<span class="string">&quot;cat /etc/config/image_sign&quot;</span> /&gt;</span><br><span class="line">etc/defnodes/default_wifi.php:<span class="variable">$image_sign</span> = fread(<span class="string">&quot;&quot;</span>, <span class="string">&quot;/etc/config/image_sign&quot;</span>);</span><br><span class="line">etc/defnodes/default_wifi.php:<span class="variable">$image_sign</span> = strip(<span class="variable">$image_sign</span>);</span><br><span class="line">etc/defnodes/default_wifi.php:&lt;&lt;?=<span class="variable">$image_sign</span>?&gt;&gt;</span><br><span class="line">etc/defnodes/default_wifi.php:&lt;/&lt;?=<span class="variable">$image_sign</span>?&gt;&gt; </span><br><span class="line">etc/init.d/S20init.sh:image_sign=`<span class="built_in">cat</span> /etc/config/image_sign`</span><br><span class="line">etc/init.d/S20init.sh:xmldb -d -n <span class="variable">$image_sign</span> -t &gt; /dev/console </span><br><span class="line">etc/init0.d/S80mfcd.sh:         image_sign=`<span class="built_in">cat</span> /etc/config/image_sign`</span><br><span class="line">etc/init0.d/S80mfcd.sh:         mfcd -l /usr/sbin/login -u Alphanetworks:<span class="variable">$image_sign</span> -i br0 &amp;</span><br><span class="line">etc/templates/hnap/GetFirmwareValidation.php:   setattr(<span class="string">&quot;/runtime/tmpdevdata/image_sign&quot;</span> ,<span class="string">&quot;get&quot;</span>,<span class="string">&quot;cat /etc/config/image_sign&quot;</span>);</span><br><span class="line">etc/templates/hnap/GetFirmwareValidation.php:   <span class="variable">$image_sign</span> = query(<span class="string">&quot;/runtime/tmpdevdata/image_sign&quot;</span>);</span><br><span class="line">etc/templates/hnap/GetFirmwareValidation.php:   setattr(<span class="string">&quot;/runtime/tmpdevdata/encimg&quot;</span> ,<span class="string">&quot;get&quot;</span>,<span class="string">&quot;encimg -d -i &quot;</span>.<span class="variable">$fw_path</span>.<span class="string">&quot; -s &quot;</span>.<span class="variable">$image_sign</span>.<span class="string">&quot; &gt; /dev/console \n&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>We can see an interesting file <code>/etc/config/image_sign</code> , Now if open the file we can see a string <code>wrgac65_dlink.2015_dir842</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ <span class="built_in">cat</span> etc/config/image_sign                                                                                                                                                                                                          </span><br><span class="line">wrgac65_dlink.2015_dir842</span><br></pre></td></tr></table></figure>
+
+<p>Now let’s input the extracted string as signature to decrypt the firmware file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ sudo <span class="built_in">chroot</span> . ./qemu-mips-static ./bin/sh                                                                                                                                                                                               </span><br><span class="line"></span><br><span class="line">BusyBox v1.22.1 (2018-07-02 15:18:10 CST) built-in shell (ash)</span><br><span class="line">Enter <span class="string">&#x27;help&#x27;</span> <span class="keyword">for</span> a list of built-in commands.</span><br><span class="line"></span><br><span class="line"><span class="comment"># encimg -s wrgac65_dlink.2015_dir842 -v -d -i ./DIR842C1_FW313WWb05.bin </span></span><br><span class="line">The file length of ./DIR842C1_FW313WWb05.bin is 11280544</span><br></pre></td></tr></table></figure>
+
+<p>If we run <code>binwalk</code> we can see various information which means our firmware is decrypted</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ binwalk DIR842C1_FW313WWb05.bin                                                                                                                                                                                                         </span><br><span class="line"></span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line">0             0x0             DLOB firmware header, boot partition: <span class="string">&quot;dev=/dev/mtdblock/5&quot;</span></span><br><span class="line">112           0x70            uImage header, header size: 64 bytes, header CRC: 0xA5A9FEC, created: 2019-09-10 02:41:50, image size: 1234827 bytes, Data Address: 0x80060000, Entry Point: 0x80060000, data CRC: 0xAAFF08AD, OS: Linux, CPU: MIPS, image <span class="built_in">type</span>: Multi-File Image, compression <span class="built_in">type</span>: lzma, image name: <span class="string">&quot;MIPS Seattle Linux-3.3.8&quot;</span></span><br><span class="line">184           0xB8            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 3641936 bytes</span><br><span class="line">1245296       0x130070        PackImg section delimiter tag, little endian size: 2136320 bytes; big endian size: 10035200 bytes</span><br><span class="line">1245328       0x130090        Squashfs filesystem, little endian, version 4.0, compression:xz, size: 10032180 bytes, 2560 inodes, blocksize: 131072 bytes, created: 2019-09-10 02:41:56</span><br></pre></td></tr></table></figure>
+
+	  <div class="article-footer-copyright">
+
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"></a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2024/03/17/screenctf/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2024-10-14 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/IoT/">IoT<span>2</span></a></li> <li><a href="/tags/Firmware/">Firmware<span>1</span></a></li> <li><a href="/tags/D-Link/">D-Link<span>1</span></a></li> <li><a href="/tags/Router/">Router<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2024 k0x55aa's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"https://raw.githubusercontent.com/iCharlesZ/vscode-live2d-models/master/model-library/girls-frontline/M4-SOPMOD-II-2/normal/model.json"},"display":{"position":"right","superSample":2,"width":200,"height":450,"hOffset":30,"vOffset":-20},"mobile":{"position":"bottom","width":100,"height":100,"show":true,"scale":0.5,"hOffset":1,"vOffset":-1},"react":{"opacityDefault":1,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body>
+   </html>

@@ -137,6 +137,44 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2024/10/14/decryptingfirmware/" >Decrypting An Encrypted Firmware (DIR842)</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-10-14  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<p>To download the firmware copy the firmware version shown below from the <a href="ftp://ftp2.dlink.com/PRODUCTS/DIR-842/REVC/">D-Link FTP Server</a></p>
+<p><img src="/2024/10/14/decryptingfirmware/image.png" alt="alt text"></p>
+<p>unzip the file <code>DIR-842_REVC_FIRMWARE_v3.13B05.zip</code> and run binwalk on the extracted file</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842]</span><br><span class="line">└─$ binwalk DIR842C1_FW313WWb05.bin</span><br><span class="line"></span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>As we can see that our file firmware <code>DIR842C1_FW313WWb05.bin</code> is encrypted.</p>
+<p>Now let’s Unzip the file <code>DIR-842_REVC_FIRMWARE_v3.10B05.zip</code> and extract the filesystem of <code>DIR842C1_FW302b03_middle.bin</code> using <code>binwalk</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842]                                                                                                                                                                                                        </span><br><span class="line">└─$ sudo binwalk -e --preserve-symlinks --run-as=root DIR842C1_FW302b03_middle.bin</span><br><span class="line">[sudo] password <span class="keyword">for</span> kali:                                                                                                                                                                                                                  </span><br><span class="line">                                                                                                                                                                                                                                           </span><br><span class="line">DECIMAL       HEXADECIMAL     DESCRIPTION                                                                                                                                                                                                  </span><br><span class="line">--------------------------------------------------------------------------------                                                                                                                                                           </span><br><span class="line">0             0x0             DLOB firmware header, boot partition: <span class="string">&quot;dev=/dev/mtdblock/5&quot;</span>                                                                                                                                                  </span><br><span class="line">112           0x70            uImage header, header size: 64 bytes, header CRC: 0xA33A0532, created: 2018-07-02 07:26:57, image size: 1234680 bytes, Data Address: 0x80060000, Entry Point: 0x80060000, data CRC: 0xE2D6A8D0, OS: Linux, CPU: MIPS, image <span class="built_in">type</span>: Multi-File Image, compression <span class="built_in">type</span>: lzma, image name: <span class="string">&quot;MIPS Seattle Linux-3.3.8&quot;</span>                                                                                                                                      </span><br><span class="line">184           0xB8            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 3641936 bytes                                                                                                     </span><br><span class="line">1245296       0x130070        PackImg section delimiter tag, little endian size: 11572736 bytes; big endian size: 9875456 bytes                                                                                                            </span><br><span class="line">1245328       0x130090        Squashfs filesystem, little endian, version 4.0, compression:xz, size: 9872196 bytes, 2533 inodes, blocksize: 131072 bytes, created: 2018-07-02 07:27:09</span><br></pre></td></tr></table></figure>
+<p>Go to extracted file system and identify the architecture by using <code>file</code> command of it’s busybox binary</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/DIR842/_DIR842C1_FW302b03_middle.bin.extracted/squashfs-root]</span><br><span class="line">└─$ file bin/busybox </span><br><span class="line">bin/busybox: ELF 32-bit MSB executable, MIPS, MIPS32 rel2 version 1 (SYSV), statically linked, stripped</span><br></pre></td></tr></table></figure>
+
+<p>As we can see that the architecture is <code>mips32</code> . Let’s try to run the busybox using <code>qemu-mips-static</code></p>
+	
+	</div>
+  <a type="button" href="/2024/10/14/decryptingfirmware/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2024/03/17/screenctf/" >CTF - LEVEL 101</a>
 		</h3>
 		</div>
@@ -346,23 +384,29 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
+			<li><a href="/tags/IoT/">IoT<span>2</span></a></li>
+		
+			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
+		
+			<li><a href="/tags/web101/">web101<span>1</span></a></li>
+		
+			<li><a href="/tags/Router/">Router<span>1</span></a></li>
+		
 			<li><a href="/tags/WINDOWS/">WINDOWS<span>1</span></a></li>
 		
 			<li><a href="/tags/linux/">linux<span>1</span></a></li>
 		
 			<li><a href="/tags/web-application/">web application<span>1</span></a></li>
 		
-			<li><a href="/tags/web101/">web101<span>1</span></a></li>
+			<li><a href="/tags/Firmware/">Firmware<span>1</span></a></li>
 		
-			<li><a href="/tags/exploit/">exploit<span>1</span></a></li>
-		
-			<li><a href="/tags/IoT/">IoT<span>1</span></a></li>
-		
-			<li><a href="/tags/web-hacking/">web hacking<span>1</span></a></li>
+			<li><a href="/tags/D-Link/">D-Link<span>1</span></a></li>
 		
 			<li><a href="/tags/ctf/">ctf<span>1</span></a></li>
 		
-			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
+			<li><a href="/tags/exploit/">exploit<span>1</span></a></li>
+		
+			<li><a href="/tags/web-hacking/">web hacking<span>1</span></a></li>
 		
 		 
 		</ul>
@@ -374,6 +418,10 @@
 <div class="widget">
   <h4>Recent Posts</h4>
   <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2024/10/14/decryptingfirmware/" ><i class="fa fa-file-o"></i>Decrypting An Encrypted Fir...</a>
+      </li>
     
       <li>
         <a href="/2024/03/17/screenctf/" ><i class="fa fa-file-o"></i>CTF - LEVEL 101</a>
@@ -389,10 +437,6 @@
     
       <li>
         <a href="/2024/01/13/pe-structure1/" ><i class="fa fa-file-o"></i>Understanding The PE File F...</a>
-      </li>
-    
-      <li>
-        <a href="/2024/01/13/IoT-Notes/" ><i class="fa fa-file-o"></i>IoT Notes</a>
       </li>
     
   </ul>
