@@ -137,6 +137,41 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2024/12/27/reversetuts1/" >Reversing - I (Unpacking UPX)</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-12-27  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<h1 id="What-is-unpacking"><a href="#What-is-unpacking" class="headerlink" title="What is unpacking"></a>What is unpacking</h1><p>Below is the simple general overview of a original binary and packed binary. As we can see from the diagram below. The entry point starts at the <code>.text</code> section for non-packed binary where as for the packed binary there contains a packing stub or packer code which is the entry point for the packed binary that keeps the original code compressed.</p>
+<p>Example: A normal unarchive or unzip folder vs an archive zip folder. In order to see the content or use the content, we need to unzip the content of the file. Similarly for packed binary, in order to see the original code we need to unpacked the zip binary file.</p>
+<p>In simple layman terms we can say that unpacking is like unzipping the original data but its only specific to binary executable.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts1.png" alt="alt text"></p>
+<p>Now that we have a rough idea about what is unpacking lets deep dive into the packed binary</p>
+<p>As seen below in <code>PEiD</code> the binary is packed in <code>UPX</code></p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts2.png" alt="alt text"><br>we open the binary file in <code>x32dbg</code> and view the <code>memory map</code> we can see the <code>section</code> and loading address such as <code>UPX0</code>, <code>UPX1</code> etc.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts3.png" alt="alt text"><br>Now  if go to the entry point in the <code>CPU</code> section of <code>x32dbg</code> we will see that there is <code>pushad</code> instruction</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts4.png" alt="alt text"><br><code>pushad</code> push all the instruction onto the stacks, visit the document to read more about it. <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/pusha:pushad">pushad</a><br>For the reverse operation the <code>popad</code> is being used so that what ever present in the stack can be clear. Since we know that some instruction is being push onto stack which is the packing instruction, so after the <code>popad</code> the packing instruction will be completed and our binary will be unpacked.</p>
+	
+	</div>
+  <a type="button" href="/2024/12/27/reversetuts1/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2024/10/31/bufferoverflowmips/" >Stack Overflow in MIPSEL</a>
 		</h3>
 		</div>
@@ -427,33 +462,41 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/web101/">web101<span>1</span></a></li>
-		
-			<li><a href="/tags/exploit/">exploit<span>1</span></a></li>
-		
-			<li><a href="/tags/WINDOWS/">WINDOWS<span>1</span></a></li>
-		
-			<li><a href="/tags/router/">router<span>1</span></a></li>
-		
 			<li><a href="/tags/D-Link/">D-Link<span>1</span></a></li>
-		
-			<li><a href="/tags/linux/">linux<span>1</span></a></li>
-		
-			<li><a href="/tags/stackoverflow/">stackoverflow<span>1</span></a></li>
-		
-			<li><a href="/tags/web-application/">web application<span>1</span></a></li>
 		
 			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
 		
-			<li><a href="/tags/IoT/">IoT<span>2</span></a></li>
+			<li><a href="/tags/x86/">x86<span>1</span></a></li>
+		
+			<li><a href="/tags/stackoverflow/">stackoverflow<span>1</span></a></li>
+		
+			<li><a href="/tags/WINDOWS/">WINDOWS<span>2</span></a></li>
+		
+			<li><a href="/tags/web101/">web101<span>1</span></a></li>
 		
 			<li><a href="/tags/web-hacking/">web hacking<span>1</span></a></li>
 		
 			<li><a href="/tags/Firmware/">Firmware<span>1</span></a></li>
 		
+			<li><a href="/tags/router/">router<span>1</span></a></li>
+		
+			<li><a href="/tags/exploit/">exploit<span>1</span></a></li>
+		
 			<li><a href="/tags/ctf/">ctf<span>1</span></a></li>
 		
+			<li><a href="/tags/web-application/">web application<span>1</span></a></li>
+		
+			<li><a href="/tags/IoT/">IoT<span>2</span></a></li>
+		
+			<li><a href="/tags/linux/">linux<span>1</span></a></li>
+		
 			<li><a href="/tags/Router/">Router<span>1</span></a></li>
+		
+			<li><a href="/tags/unpackme/">unpackme<span>1</span></a></li>
+		
+			<li><a href="/tags/PE/">PE<span>1</span></a></li>
+		
+			<li><a href="/tags/reversing/">reversing<span>1</span></a></li>
 		
 		 
 		</ul>
@@ -465,6 +508,10 @@
 <div class="widget">
   <h4>Recent Posts</h4>
   <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2024/12/27/reversetuts1/" ><i class="fa fa-file-o"></i>Reversing - I (Unpacking UPX)</a>
+      </li>
     
       <li>
         <a href="/2024/10/31/bufferoverflowmips/" ><i class="fa fa-file-o"></i>Stack Overflow in MIPSEL</a>
@@ -480,10 +527,6 @@
     
       <li>
         <a href="/2024/03/16/format-string1/" ><i class="fa fa-file-o"></i>Format String - GOT Overwrite</a>
-      </li>
-    
-      <li>
-        <a href="/2024/02/10/antivirus1/" ><i class="fa fa-file-o"></i>How To Write An Anti-Virus ...</a>
       </li>
     
   </ul>

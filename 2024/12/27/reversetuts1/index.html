@@ -1,0 +1,303 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>Reversing - I (Unpacking UPX) | k0x55aa</title>
+  <meta name="author" content="k0x55aa">
+  
+  <meta name="description" content="What is unpackingBelow is the simple general overview of a original binary and packed binary. As we can see from the diagram below. The entry point starts at the .text section for non-packed binary where as for the packed binary there contains a packing stub or packer code which is the entry point for the packed binary that keeps the original code compressed.
+Example: A normal unarchive or unzip folder vs an archive zip folder. In order to see the content or use the content, we need to unzip the content of the file. Similarly for packed binary, in order to see the original code we need to unpacked the zip binary file.
+In simple layman terms we can say that unpacking is like unzipping the original data but its only specific to binary executable.
+
+Now that we have a rough idea about what is unpacking lets deep dive into the packed binary
+As seen below in PEiD the binary is packed in UPX
+we open the binary file in x32dbg and view the memory map we can see the section and loading address such as UPX0, UPX1 etc.
+Now  if go to the entry point in the CPU section of x32dbg we will see that there is pushad instruction
+pushad push all the instruction onto the stacks, visit the document to read more about it. pushadFor the reverse operation the popad is being used so that what ever present in the stack can be clear. Since we know that some instruction is being push onto stack which is the packing instruction, so after the popad the packing instruction will be completed and our binary will be unpacked."> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Reversing - I (Unpacking UPX)"/>
+  <meta property="og:site_name" content="k0x55aa"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="k0x55aa" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">k0x55aa</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> Reversing - I (Unpacking UPX)</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h1 id="What-is-unpacking"><a href="#What-is-unpacking" class="headerlink" title="What is unpacking"></a>What is unpacking</h1><p>Below is the simple general overview of a original binary and packed binary. As we can see from the diagram below. The entry point starts at the <code>.text</code> section for non-packed binary where as for the packed binary there contains a packing stub or packer code which is the entry point for the packed binary that keeps the original code compressed.</p>
+<p>Example: A normal unarchive or unzip folder vs an archive zip folder. In order to see the content or use the content, we need to unzip the content of the file. Similarly for packed binary, in order to see the original code we need to unpacked the zip binary file.</p>
+<p>In simple layman terms we can say that unpacking is like unzipping the original data but its only specific to binary executable.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts1.png" alt="alt text"></p>
+<p>Now that we have a rough idea about what is unpacking lets deep dive into the packed binary</p>
+<p>As seen below in <code>PEiD</code> the binary is packed in <code>UPX</code></p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts2.png" alt="alt text"><br>we open the binary file in <code>x32dbg</code> and view the <code>memory map</code> we can see the <code>section</code> and loading address such as <code>UPX0</code>, <code>UPX1</code> etc.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts3.png" alt="alt text"><br>Now  if go to the entry point in the <code>CPU</code> section of <code>x32dbg</code> we will see that there is <code>pushad</code> instruction</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts4.png" alt="alt text"><br><code>pushad</code> push all the instruction onto the stacks, visit the document to read more about it. <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/pusha:pushad">pushad</a><br>For the reverse operation the <code>popad</code> is being used so that what ever present in the stack can be clear. Since we know that some instruction is being push onto stack which is the packing instruction, so after the <code>popad</code> the packing instruction will be completed and our binary will be unpacked.</p>
+<p>Lets search for <code>popad</code> instruction and set a breakpoint or we can set a breakpoint in the <code>esp</code> register. Clicked <code>f8</code> on <code>pushad</code></p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts5.png" alt="alt text"><br>Now go to register <code>esp</code> and right clicked follow dump</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts6.png" alt="alt text"><br>Now on dump select  <code>80 9c 40 00</code> then set a break point on hardware access Dword</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts7.png" alt="alt text"><br>clicked <code>f9</code> we will see our <code>eip</code> is instruction is after the popad</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts8.png" alt="alt text"><br>Now find the next jump address to function</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts9.png" alt="alt text"><br><code>f7</code> to <code>step in</code> to see the unpacked binary.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts10.png" alt="alt text"><br>We can see the details by clicking the <code>A2</code> button to see the strings is being decode or not. If we can see clear strings that there is high indication that the binary is unpacked</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts11.png" alt="alt text"><br>Click on <code>Plugin</code> then <code>Scylla</code> or <code>Ctrl + i</code> then <code>IAT Search</code> -&gt; <code>Get Imports</code> then clicked <code>dump</code> the file.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts12.png" alt="alt text"><br>Once the file is dump <code>Fix Dump</code> and clicked the dump file.</p>
+<p><img src="/2024/12/27/reversetuts1/reversingtuts13.png" alt="alt text"></p>
+
+	  <div class="article-footer-copyright">
+
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"></a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2024/10/31/bufferoverflowmips/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2024-12-27 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/WINDOWS/">WINDOWS<span>2</span></a></li> <li><a href="/tags/unpackme/">unpackme<span>1</span></a></li> <li><a href="/tags/reversing/">reversing<span>1</span></a></li> <li><a href="/tags/PE/">PE<span>1</span></a></li> <li><a href="/tags/x86/">x86<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2024 k0x55aa's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"https://raw.githubusercontent.com/iCharlesZ/vscode-live2d-models/master/model-library/girls-frontline/M4-SOPMOD-II-2/normal/model.json"},"display":{"position":"right","superSample":2,"width":200,"height":450,"hOffset":30,"vOffset":-20},"mobile":{"position":"bottom","width":100,"height":100,"show":true,"scale":0.5,"hOffset":1,"vOffset":-1},"react":{"opacityDefault":1,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body>
+   </html>
