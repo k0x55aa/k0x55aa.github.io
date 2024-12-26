@@ -12,12 +12,12 @@
   <meta name="description" content="What is unpackingBelow is the simple general overview of a original binary and packed binary. As we can see from the diagram below. The entry point starts at the .text section for non-packed binary where as for the packed binary there contains a packing stub or packer code which is the entry point for the packed binary that keeps the original code compressed.
 Example: A normal unarchive or unzip folder vs an archive zip folder. In order to see the content or use the content, we need to unzip the content of the file. Similarly for packed binary, in order to see the original code we need to unpacked the zip binary file.
 In simple layman terms we can say that unpacking is like unzipping the original data but its only specific to binary executable.
-
 Now that we have a rough idea about what is unpacking lets deep dive into the packed binary
 As seen below in PEiD the binary is packed in UPX
 we open the binary file in x32dbg and view the memory map we can see the section and loading address such as UPX0, UPX1 etc.
 Now  if go to the entry point in the CPU section of x32dbg we will see that there is pushad instruction
-pushad push all the instruction onto the stacks, visit the document to read more about it. pushadFor the reverse operation the popad is being used so that what ever present in the stack can be clear. Since we know that some instruction is being push onto stack which is the packing instruction, so after the popad the packing instruction will be completed and our binary will be unpacked."> 
+pushad push all the instruction onto the stacks, visit the document to read more about it. pushadFor the reverse operation the popad is being used so that what ever present in the stack can be clear. Since we know that some instruction is being push onto stack which is the packing instruction, so after the popad the packing instruction will be completed and our binary will be unpacked.
+Lets search for popad instruction and set a breakpoint or we can set a breakpoint in the esp register. Clicked f8 on pushad"> 
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -139,10 +139,9 @@ pushad push all the instruction onto the stacks, visit the document to read more
 	<div class="mypage">		
 	  		
 
-	  <h1 id="What-is-unpacking"><a href="#What-is-unpacking" class="headerlink" title="What is unpacking"></a>What is unpacking</h1><p>Below is the simple general overview of a original binary and packed binary. As we can see from the diagram below. The entry point starts at the <code>.text</code> section for non-packed binary where as for the packed binary there contains a packing stub or packer code which is the entry point for the packed binary that keeps the original code compressed.</p>
+	  <h1 id="What-is-unpacking"><a href="#What-is-unpacking" class="headerlink" title="What is unpacking"></a>What is unpacking</h1><p>Below is the simple general overview of a original binary and packed binary. As we can see from the diagram below. The entry point starts at the <code>.text</code> section for non-packed binary where as for the packed binary there contains a packing stub or packer code which is the entry point for the packed binary that keeps the original code compressed.<br><img src="/2024/12/27/reversetuts1/reversingtuts1.png" alt="alt text"></p>
 <p>Example: A normal unarchive or unzip folder vs an archive zip folder. In order to see the content or use the content, we need to unzip the content of the file. Similarly for packed binary, in order to see the original code we need to unpacked the zip binary file.</p>
 <p>In simple layman terms we can say that unpacking is like unzipping the original data but its only specific to binary executable.</p>
-<p><img src="/2024/12/27/reversetuts1/reversingtuts1.png" alt="alt text"></p>
 <p>Now that we have a rough idea about what is unpacking lets deep dive into the packed binary</p>
 <p>As seen below in <code>PEiD</code> the binary is packed in <code>UPX</code></p>
 <p><img src="/2024/12/27/reversetuts1/reversingtuts2.png" alt="alt text"><br>we open the binary file in <code>x32dbg</code> and view the <code>memory map</code> we can see the <code>section</code> and loading address such as <code>UPX0</code>, <code>UPX1</code> etc.</p>
