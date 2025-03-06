@@ -8,16 +8,16 @@ import * as Plugin from "./quartz/plugins"
  */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "Project Asuras",
-    pageTitleSuffix: " - Project Asuras",
+    pageTitle: "k0x55aa",
+    pageTitleSuffix: " - k0x55aa",
     enableSPA: true,
     enablePopovers: true,
     analytics: {
       provider: "google",
-      tagId: "G-FHNS47PS24",
+      tagId: "",
     },
     locale: "en-US",
-    baseUrl: "https://projectasuras.github.io/",
+    baseUrl: "https://k0x55aa.github.io/",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
     generateSocialImages: false,
