@@ -21,16 +21,9 @@ export default ((opts?: Options) => {
         </p>
          */}
          <p>
-          <a href="https://github.com/projectasuras" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-github"></i></a>
-          <a href="https://discord.com/invite/pS7t73XTDK" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-discord"></i></a>
-          <a href="https://medium.com/@projectasuras" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-medium"></i></a>
-          <a href="https://dev.to/projectasuras" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-dev"></i></a>
-          <a href="https://www.youtube.com/@projectasuras" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-youtube"></i></a>
-          <a href="https://twitter.com/projectasuras" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.linkedin.com/in/project-asuras-2bb07333a" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-linkedin"></i></a>
-          <a href="https://www.instagram.com/projectasuras/" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-instagram"></i></a>
-          <a href="https://hub.docker.com/u/projectasuras" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-docker"></i></a>
-          <a href="mailto:projectasuras@proton.me" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa fa-envelope"></i></a>
+          <a href="https://github.com/k0x55aa" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-github"></i></a>
+          <a href="https://twitter.com/k0x55aa" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.linkedin.com/in/krishnamohansonowal" target="_blank" class="text-white" style={"margin-right: 1.0rem!important"}><i class="fa-brands fa-linkedin"></i></a>
         </p>
         © {year} ProjectAsuras
         {/* <ul>
