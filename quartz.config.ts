@@ -17,7 +17,7 @@ const config: QuartzConfig = {
       tagId: "",
     },
     locale: "en-US",
-    baseUrl: "https://projectasuras.github.io/",
+    baseUrl: "https://k0x55aa.github.io/",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
     generateSocialImages: false,
