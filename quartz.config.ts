@@ -14,7 +14,7 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: {
       provider: "google",
-      tagId: "G-FHNS47PS24",
+      tagId: "",
     },
     locale: "en-US",
     baseUrl: "https://projectasuras.github.io/",
